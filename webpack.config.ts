@@ -29,7 +29,8 @@ const getConfig = (
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        // test: /\.tsx?$/,
+        test: /\.(js|ts)x?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -45,6 +46,7 @@ const getConfig = (
             loader: MiniCssExtractPlugin.loader,
           },
           "css-loader",
+          "style-loader",
         ],
       },
     ],
@@ -59,7 +61,7 @@ const getConfig = (
   },
   plugins: [new LoadablePlugin(), new MiniCssExtractPlugin()],
   resolve: {
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".css", ".scss"],
   },
 });
 
