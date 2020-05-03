@@ -1,8 +1,13 @@
 import path from "path";
 import express from "express";
-import React from "react";
-import { renderToString } from "react-dom/server";
-import { ChunkExtractor } from "@loadable/server";
+import ssr from "./controllers/ssr";
+import { initialize } from "koalanlp/Util";
+import api from "./controllers/api";
+
+initialize({
+  packages: { KMR: "2.1.4" },
+  verbose: true,
+});
 
 const app = express();
 
@@ -31,40 +36,9 @@ if (process.env.NODE_ENV !== "production") {
   })();
 }
 
-const nodeStats = path.resolve(
-  __dirname,
-  "../../public/dist/node/loadable-stats.json"
-);
+app.get("/api", api);
 
-const webStats = path.resolve(
-  __dirname,
-  "../../public/dist/web/loadable-stats.json"
-);
-
-app.get("*", (req, res) => {
-  const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
-  const { default: App } = nodeExtractor.requireEntrypoint();
-
-  const webExtractor = new ChunkExtractor({ statsFile: webStats });
-  const jsx = webExtractor.collectChunks(<App />);
-
-  const html = renderToString(jsx);
-
-  res.set("content-type", "text/html");
-  res.send(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-        ${webExtractor.getLinkTags()}
-        ${webExtractor.getStyleTags()}
-        </head>
-        <body>
-          <div id="main">${html}</div>
-          ${webExtractor.getScriptTags()}
-        </body>
-      </html>
-    `);
-});
+app.get("*", ssr);
 
 // eslint-disable-next-line no-console
 app.listen(9000, () => console.log("Server started http://localhost:9000"));
