@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 
-import Movie from "./Movie";
-
 const App = (): JSX.Element => {
   return (
     <div>
