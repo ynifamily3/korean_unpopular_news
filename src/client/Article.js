@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import LinesEllipsis from "react-lines-ellipsis";
+import "./Article.css";
 
 function Article({ title, attacedImg, category, body }) {
   return (
@@ -26,3 +28,21 @@ function ArticleCell({ poster, alt }) {
 function ArticleCategory({ category }) {
   return <span className="ArticleCategory">{category}</span>;
 }
+
+Article.propTypes = {
+  title: PropTypes.string.isRequired,
+  poster: PropTypes.string.isRequired,
+  genres: PropTypes.array.isRequired,
+  synopsis: PropTypes.string.isRequired,
+};
+
+ArticleCell.propTypes = {
+  poster: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+};
+
+ArticleCategory.propTypes = {
+  genre: PropTypes.string.isRequired,
+};
+
+export default Article;

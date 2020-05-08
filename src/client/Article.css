@@ -1,0 +1,12 @@
+.Article {
+    background-color: white;
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+    text-overflow: ellipsis;
+    padding: 0 20px;
+    box-shadow: 0 8px 38px rgba(133, 133, 133, 0.3), 0 5px 12px #85858538;
+  }
