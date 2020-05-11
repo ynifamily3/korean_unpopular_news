@@ -15,6 +15,50 @@ export interface Pair {
   value: number;
 }
 
+interface TupleType {
+  key: Word[];
+  value: number;
+}
+
+class Tuple {
+  tuple: TupleType[];
+  constructor() {
+    this.tuple = [];
+  }
+  set(key: Word[], value: number): void {
+    for (const item of this.tuple) {
+      if (item.key.length === key.length) {
+        for (let i = 0; i < key.length; i++) {
+          if (
+            item.key[i].surface === key[i].surface &&
+            item.key[i].tag === key[i].tag
+          ) {
+            item.value = value;
+            return;
+          }
+        }
+      }
+    }
+    this.tuple.push({ key, value });
+  }
+
+  get(key: Word[]): number | undefined {
+    for (const item of this.tuple) {
+      if (item.key.length === key.length) {
+        for (let i = 0; i < key.length; i++) {
+          if (
+            item.key[i].surface === key[i].surface &&
+            item.key[i].tag === key[i].tag
+          ) {
+            return item.value;
+          }
+        }
+      }
+    }
+    return undefined;
+  }
+}
+
 // [{surface:xx, tag:yy}=w1, {surface:zz, tag:aa}=w2...] 으로 이루어짐
 export class WordMap {
   map: WordMapElemType[];
@@ -210,6 +254,7 @@ export default class TextRank {
 
   getPMI(a: Word, b: Word): number {
     const co0: number | undefined = this.dictNear.get([a, b]);
+    // console.log("불가능", co0);
     const co: number = typeof co0 === "undefined" ? 0 : co0;
     if (co === 0) {
       return -1; // pmi 계산 불가능
@@ -218,7 +263,7 @@ export default class TextRank {
     const bCnt = this.dictCount.get(b);
     if (typeof aCnt === "number" && typeof bCnt === "number")
       return Math.log((co * this.nTotal) / aCnt / bCnt);
-    return -1;
+    return -2;
   }
 
   getI(a: Word): number {
@@ -231,61 +276,57 @@ export default class TextRank {
   }
 
   build(): void {
-    // this.graph.addEdge
-    // dictCount keys로부터 노드를 다 추가한다.
-    // for (const z of this.dictBiCount) {
-    //   const x = this.ots(z[0]);
-    //   const a = this.mks(x[0], x[1]);
-    //   const b = this.mks(x[2], x[3]);
-    //   const n = z[1];
-    //   this.graph.addEdge(a, b, n * this.coef + (1 - this.coef));
-    // }
     for (const x of this.dictBiCount.entries()) {
       const a: Word = x.key[0];
       const b: Word = x.key[1];
       const n: number = x.value;
-      // this.graph.addEdge()
+      this.graph.addEdge(a, b, n * this.coef + (1 - this.coef));
     }
   }
 
   // 새로 만든 익스트랙트
-  // extract(ratio: number = 0.1) {
-  //   const ranks: Map<string, number> = this.graph.rank();
-  //   console.log(ranks);
-  //   const cand = Array.from(ranks.entries())
-  //     .sort((a, b) => {
-  //       return b[1] - a[1];
-  //     })
-  //     .slice(0, Math.floor(ranks.size * ratio))
-  //     .map((x) => x[0]);
-  //   // console.log(cand);
-  //   const pairness: Map<string, number> = new Map();
-  //   const startOf: Map<string, number> = new Map();
-  //   const tuples: Map<string, number> = new Map();
+  extract(ratio: number = 0.1) {
+    const ranks: WordMap = this.graph.rank();
+    const cand: WordMapElemType[] = Array.from(ranks.entries())
+      .sort((a, b) => {
+        if (a.key.surface < b.key.surface) {
+          return 1;
+        } else if (a.key.surface > b.key.surface) {
+          return -1;
+        }
+        return 0;
+      })
+      .slice(0, Math.floor(ranks.entries().length * ratio));
+    // .map((x) => x); // {surface, tag}
+    console.log(cand);
+    const pairness: WordPairMap = new WordPairMap();
+    const startOf: WordMap = new WordMap();
+    const tuples: Tuple = new Tuple();
 
-  //   for (const k of cand) {
-  //     const [surface, tag] = this.ots(k);
-  //     const word: Word = { surface, tag };
-  //     tuples[k] = this.getI(word) * ranks[k];
-  //     for (const l of cand) {
-  //       if (k === l) continue;
-  //       const [surface, tag] = this.ots(l);
-  //       const lword: Word = { surface, tag };
-  //       const PMI = this.getPMI(word, lword);
-  //       console.log(word, lword);
-  //       if (PMI !== -1) {
-  //         const maked = k + ":" + l;
-  //         pairness[maked] = PMI;
-  //       } else {
-  //         // PMIPASS
-  //         console.log("PMI pass");
-  //       }
-  //     }
-  //   }
-
-  //   ////
-  //   console.log(pairness);
-  // }
+    for (const k of cand) {
+      const surface = k.key.surface;
+      const tag = k.key.tag;
+      const word: Word = { surface, tag };
+      // tuples[word] = this.getI(word) * ranks.get(word);
+      const rgw = ranks.get(word);
+      if (!rgw) throw new Error("ERR!");
+      tuples.set([word], this.getI(word) * rgw);
+      for (const l of cand) {
+        if (k === l) continue; // 섈로우로 비교해도 될듯
+        const surface = l.key.surface;
+        const tag = l.key.tag;
+        const lword: Word = { surface, tag };
+        const PMI = this.getPMI(word, lword);
+        console.log(PMI, word, lword);
+        if (PMI !== -1) {
+          // pairness[maked] = PMI;
+          pairness.set([word, lword], PMI);
+          console.log("^^", word, lword, pairness.get([word, lword]));
+        }
+      }
+    }
+    // 이제... for (k, l) in sorted(pairness, key=pairness.get, reverse=True): 작업 해야지
+  }
 
   // 빌드랑 랭크를 합친것
   //   extractKeywords(wordList: Word[], numKeywords: number): [string, number][] {

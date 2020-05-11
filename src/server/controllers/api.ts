@@ -42,6 +42,6 @@ export default async function api(
   rank.load(sents);
   rank.build();
   // res.send(rank.extractKeywords(words, 10));
-  // res.send(rank.extract());
-  res.send("hello");
+  res.send(rank.extract());
+  // res.send("hello");
 }

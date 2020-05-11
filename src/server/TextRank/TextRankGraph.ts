@@ -68,7 +68,6 @@ export default class TextRankGraph {
     // 그래프의 엔트리는 [str, str , number][] 이다..
     const gpE = this.graph.entries();
     for (let i = 0; i < gpE.length; i++) {
-      console.log(gpE[i].key, gpE[i].value);
       const node = gpE[i].key;
       const outEdge = gpE[i].value;
       nodeweight.set(node, defaultWeight);
