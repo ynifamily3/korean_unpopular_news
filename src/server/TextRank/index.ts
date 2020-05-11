@@ -5,31 +5,95 @@ export interface Word {
   tag: string;
 }
 
-interface Pair {
-  key: [string, string];
+interface WordMapElemType {
+  key: Word;
   value: number;
 }
 
-class WordPair {
+export interface Pair {
+  key: [Word, Word];
+  value: number;
+}
+
+// [{surface:xx, tag:yy}=w1, {surface:zz, tag:aa}=w2...] 으로 이루어짐
+export class WordMap {
+  map: WordMapElemType[];
+  constructor() {
+    this.map = [];
+  }
+
+  set(key: Word, value: number): void {
+    for (const item of this.map) {
+      if (item.key.surface === key.surface && item.key.tag === key.tag) {
+        item.value = value;
+        return;
+      }
+    }
+    // 없다면 추가할 것.
+    this.map.push({
+      key,
+      value,
+    });
+  }
+
+  get(key: Word): number | undefined {
+    for (const item of this.map) {
+      if (item.key.surface === key.surface && item.key.tag === key.tag) {
+        return item.value;
+      }
+    }
+    return undefined;
+  }
+
+  has(key: Word): boolean {
+    for (const item of this.map) {
+      if (item.key.surface === key.surface && item.key.tag === key.tag) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  values(): number[] {
+    return this.map.map((x) => x.value);
+  }
+
+  entries(): WordMapElemType[] {
+    return this.map;
+  }
+}
+
+// [ Map-Map : value ...]
+class WordPairMap {
   map: Pair[];
 
   constructor() {
     this.map = [];
   }
 
-  set(key: [string, string], value: number): void {
+  set(key: [Word, Word], value: number): void {
     for (const item of this.map) {
-      if (item.key[0] === key[0] && item.key[1] === key[1]) {
+      if (
+        item.key[0].surface === key[0].surface &&
+        item.key[0].tag === key[0].tag &&
+        item.key[1].surface === key[1].surface &&
+        item.key[1].tag === key[1].tag
+      ) {
         item.value = value;
         return;
       }
     }
-    this.map.push({ key: key, value: value });
+    this.map.push({ key, value });
   }
 
-  get(key: [string, string]): number | undefined {
+  get(key: [Word, Word]): number | undefined {
     for (const item of this.map) {
-      if (item.key[0] === key[0] && item.key[1] === key[1]) {
+      if (
+        item.key[0].surface === key[0].surface &&
+        item.key[0].tag === key[0].tag &&
+        item.key[1].surface === key[1].surface &&
+        item.key[1].tag === key[1].tag
+      ) {
         return item.value;
       }
     }
@@ -68,9 +132,9 @@ export default class TextRank {
   w: number; // window size
   coef: number; // coef
   threshold: number;
-  dictCount: Map<string, number>;
-  dictBiCount: Map<string, number>; // [string, string]
-  dictNear: Map<string, number>; // [string, string]
+  dictCount: WordMap;
+  dictBiCount: WordPairMap; // [string, string]
+  dictNear: WordPairMap; // [string, string]
   nTotal: number;
   // dup zone
   graph: TextRankGraph;
@@ -79,20 +143,13 @@ export default class TextRank {
     this.w = windowSize;
     this.coef = 0.1;
     this.threshold = 0.005;
-    this.dictCount = new Map();
-    this.dictBiCount = new Map();
-    this.dictNear = new Map();
+    this.dictCount = new WordMap();
+    this.dictBiCount = new WordPairMap();
+    this.dictNear = new WordPairMap();
     this.nTotal = 0;
 
     // dup zone
     this.graph = new TextRankGraph();
-  }
-
-  mks(key: string, value: string): string {
-    return key + ":" + value;
-  }
-  ots(kv: string): string[] {
-    return kv.split(":");
   }
 
   insertPair(a: Word, b: Word): void {
@@ -101,15 +158,13 @@ export default class TextRank {
       a = b;
       b = tmp;
     } else if (a.surface === b.surface && a.tag === b.tag) return;
-    const maked = this.mks(a.surface, a.tag) + ":" + this.mks(b.surface, b.tag);
-    const val: number | undefined = this.dictBiCount.get(maked);
-    this.dictBiCount.set(maked, typeof val !== "undefined" ? val + 1 : 1);
+    const val: number | undefined = this.dictBiCount.get([a, b]);
+    this.dictBiCount.set([a, b], typeof val !== "undefined" ? val + 1 : 1);
   }
 
   insertNearPair(a: Word, b: Word): void {
-    const maked = this.mks(a.surface, a.tag) + ":" + this.mks(b.surface, b.tag);
-    const val: number | undefined = this.dictNear.get(maked);
-    this.dictNear.set(maked, typeof val !== "undefined" ? val + 1 : 1);
+    const val: number | undefined = this.dictNear.get([a, b]);
+    this.dictNear.set([a, b], typeof val !== "undefined" ? val + 1 : 1);
   }
 
   wordFilter(word: Word): boolean {
@@ -119,7 +174,7 @@ export default class TextRank {
         (stop: Word): boolean =>
           word.surface === stop.surface && word.tag === stop.tag
       ).length === 0 &&
-      word.surface.length > 1
+      word.surface.length > 1 // 두글자 이상
     )
       return true;
     return false;
@@ -131,9 +186,9 @@ export default class TextRank {
         // 스톱워드에 있는지를 체크한다.
         if (this.wordFilter(word)) {
           // 실행
-          const maked = this.mks(word.surface, word.tag);
-          const val: number | undefined = this.dictCount.get(maked);
-          this.dictCount.set(maked, typeof val !== "undefined" ? val + 1 : 1);
+          // const maked = this.mks(word.surface, word.tag);
+          const val: number | undefined = this.dictCount.get(word);
+          this.dictCount.set(word, typeof val !== "undefined" ? val + 1 : 1);
           this.nTotal += 1;
           if (i - 1 >= 0 && this.wordFilter(sent[i - 1])) {
             this.insertNearPair(sent[i - 1], word);
@@ -154,24 +209,23 @@ export default class TextRank {
   }
 
   getPMI(a: Word, b: Word): number {
-    const maked = this.mks(a.surface, a.tag) + ":" + this.mks(b.surface, b.tag);
-    const co0 = this.dictNear.get(maked);
+    const co0: number | undefined = this.dictNear.get([a, b]);
     const co: number = typeof co0 === "undefined" ? 0 : co0;
     if (co === 0) {
       return -1; // pmi 계산 불가능
     }
-    const aCnt = this.dictCount.get(this.mks(a.surface, a.tag));
-    const bCnt = this.dictCount.get(this.mks(b.surface, b.tag));
+    const aCnt = this.dictCount.get(a);
+    const bCnt = this.dictCount.get(b);
     if (typeof aCnt === "number" && typeof bCnt === "number")
       return Math.log((co * this.nTotal) / aCnt / bCnt);
     return -1;
   }
 
   getI(a: Word): number {
-    if (!this.dictCount.has(this.mks(a.surface, a.tag))) {
+    if (!this.dictCount.has(a)) {
       return -1; // I 계산 불가능
     }
-    const aCnt = this.dictCount.get(this.mks(a.surface, a.tag));
+    const aCnt = this.dictCount.get(a);
     if (typeof aCnt === "number") return Math.log(this.nTotal / aCnt);
     return -1;
   }
@@ -179,33 +233,59 @@ export default class TextRank {
   build(): void {
     // this.graph.addEdge
     // dictCount keys로부터 노드를 다 추가한다.
-    for (const z of this.dictBiCount) {
-      const x = this.ots(z[0]);
-      const a = x[0];
-      const b = x[2];
-      const n = z[1];
-      this.graph.addEdge(a, b, n * this.coef + (1 - this.coef));
+    // for (const z of this.dictBiCount) {
+    //   const x = this.ots(z[0]);
+    //   const a = this.mks(x[0], x[1]);
+    //   const b = this.mks(x[2], x[3]);
+    //   const n = z[1];
+    //   this.graph.addEdge(a, b, n * this.coef + (1 - this.coef));
+    // }
+    for (const x of this.dictBiCount.entries()) {
+      const a: Word = x.key[0];
+      const b: Word = x.key[1];
+      const n: number = x.value;
+      // this.graph.addEdge()
     }
   }
 
   // 새로 만든 익스트랙트
-  extract(ratio: number = 0.1) {
-    const ranks: Map<string, number> = this.graph.rank();
-    console.log(ranks);
-    const cand = Array.from(ranks.entries())
-      .sort((a, b) => {
-        return b[1] - a[1];
-      })
-      .slice(0, Math.floor(ranks.size * ratio))
-      .map((x) => x[0]);
-    const pairness = {};
-    const startOf = {};
-    const tuples: Map<[string, string?], number> = new Map(); // 튜플...ㅠㅠ
-    console.log(cand);
-    for (const k of cand) {
-      // tuples.set([k], this.getI(k) * ranks[k]);
-    }
-  }
+  // extract(ratio: number = 0.1) {
+  //   const ranks: Map<string, number> = this.graph.rank();
+  //   console.log(ranks);
+  //   const cand = Array.from(ranks.entries())
+  //     .sort((a, b) => {
+  //       return b[1] - a[1];
+  //     })
+  //     .slice(0, Math.floor(ranks.size * ratio))
+  //     .map((x) => x[0]);
+  //   // console.log(cand);
+  //   const pairness: Map<string, number> = new Map();
+  //   const startOf: Map<string, number> = new Map();
+  //   const tuples: Map<string, number> = new Map();
+
+  //   for (const k of cand) {
+  //     const [surface, tag] = this.ots(k);
+  //     const word: Word = { surface, tag };
+  //     tuples[k] = this.getI(word) * ranks[k];
+  //     for (const l of cand) {
+  //       if (k === l) continue;
+  //       const [surface, tag] = this.ots(l);
+  //       const lword: Word = { surface, tag };
+  //       const PMI = this.getPMI(word, lword);
+  //       console.log(word, lword);
+  //       if (PMI !== -1) {
+  //         const maked = k + ":" + l;
+  //         pairness[maked] = PMI;
+  //       } else {
+  //         // PMIPASS
+  //         console.log("PMI pass");
+  //       }
+  //     }
+  //   }
+
+  //   ////
+  //   console.log(pairness);
+  // }
 
   // 빌드랑 랭크를 합친것
   //   extractKeywords(wordList: Word[], numKeywords: number): [string, number][] {
