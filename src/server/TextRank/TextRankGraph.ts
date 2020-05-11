@@ -1,4 +1,5 @@
 export default class TextRankGraph {
+  // key string 를 surface:tag로 설정(정보 필요해..)
   graph: Map<string, [string, string, number][]> = new Map();
   d = 0.85;
   min_diff = 1e-5;

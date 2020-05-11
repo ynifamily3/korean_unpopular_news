@@ -27,11 +27,20 @@ export default async function api(
 `.replace(/\n/g, "")
   );
   const words: Word[] = [];
-  for (const sent of tagged)
-    for (const word of sent)
-      for (const mor of word)
+  const sents: Word[][] = [];
+  for (const sent of tagged) {
+    sents.push([]);
+    for (const word of sent) {
+      for (const mor of word) {
+        sents[sents.length - 1].push({ surface: mor._surface, tag: mor._tag });
         words.push({ surface: mor._surface, tag: mor._tag });
-
+      }
+    }
+  }
+  // console.log(sents);
   const rank = new TextRank(2);
-  res.send(rank.extractKeywords(words, 10));
+  rank.load(sents);
+  rank.build();
+  // res.send(rank.extractKeywords(words, 10));
+  res.send(rank.extract());
 }
