@@ -10,15 +10,30 @@ import SwiftUI
 
 struct ContentView: View {
     let articles = TestData.articles()
+    let category = ["목록1","목록2","목록3","목록4"]
     var body: some View {
         
         NavigationView{
-            List{
-                ForEach(articles) { article in
-                    ArticleView(article: article)
-                        .padding(.bottom, 16)
+            VStack{
+                List{
+                    ScrollView(.horizontal, showsIndicators: false){
+                        HStack{
+                            CategoryView()
+                            CategoryView()
+                            CategoryView()
+                            CategoryView()
+                            CategoryView()
+                            CategoryView()
+                        }
+                    }
+                    ForEach(articles) { article in
+                        ArticleView(article: article)
+                            .padding(.bottom, 16)
+                    }
                 }
             }
+            
+            
             .padding(.leading, -20)
             .padding(.trailing, -20) 
             .navigationBarTitle(Text("Articles"))

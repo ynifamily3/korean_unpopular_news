@@ -9,7 +9,6 @@
 import Foundation
 import SwiftUI
 
-
 struct ArticleTextView:View{
     let article:Article
     var body: some View{
