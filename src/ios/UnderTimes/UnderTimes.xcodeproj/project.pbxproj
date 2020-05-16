@@ -18,6 +18,7 @@
 		49B416882468559F00B2EA91 /* DummyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416842468559F00B2EA91 /* DummyData.swift */; };
 		49B416892468559F00B2EA91 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416852468559F00B2EA91 /* Article.swift */; };
 		49B4168A2468559F00B2EA91 /* ArticleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416862468559F00B2EA91 /* ArticleView.swift */; };
+		49E13051246FFDA900CCD53F /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49E13050246FFDA900CCD53F /* CategoryView.swift */; };
 		49EBB85C2469BB7400332D3A /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49EBB85B2469BB7400332D3A /* API.swift */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		49B416842468559F00B2EA91 /* DummyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyData.swift; sourceTree = "<group>"; };
 		49B416852468559F00B2EA91 /* Article.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		49B416862468559F00B2EA91 /* ArticleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleView.swift; sourceTree = "<group>"; };
+		49E13050246FFDA900CCD53F /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		49EBB85B2469BB7400332D3A /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,6 +112,7 @@
 				49B416542468556300B2EA91 /* AppDelegate.swift */,
 				49B416562468556300B2EA91 /* SceneDelegate.swift */,
 				49B416582468556300B2EA91 /* ContentView.swift */,
+				49E13050246FFDA900CCD53F /* CategoryView.swift */,
 				49B416852468559F00B2EA91 /* Article.swift */,
 				49B416862468559F00B2EA91 /* ArticleView.swift */,
 				49B416842468559F00B2EA91 /* DummyData.swift */,
@@ -285,6 +288,7 @@
 				49B416572468556300B2EA91 /* SceneDelegate.swift in Sources */,
 				49B416592468556300B2EA91 /* ContentView.swift in Sources */,
 				49B416892468559F00B2EA91 /* Article.swift in Sources */,
+				49E13051246FFDA900CCD53F /* CategoryView.swift in Sources */,
 				49EBB85C2469BB7400332D3A /* API.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
