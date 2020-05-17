@@ -20,6 +20,33 @@ interface TupleType {
   value: number;
 }
 
+interface StartOfType {
+  key: Word;
+  value: [Word, Word];
+}
+
+class StartOf {
+  startof: StartOfType[];
+  constructor() {
+    this.startof = [];
+  }
+  set(key: Word, value: [Word, Word]): void {
+    for (const item of this.startof) {
+      if (item.key.surface === key.surface && item.key.tag === key.tag) {
+        item.value = value;
+      }
+    }
+  }
+  get(key: Word): [Word, Word] | undefined {
+    for (const item of this.startof) {
+      if (item.key.surface === key.surface && item.key.tag === key.tag) {
+        return item.value;
+      }
+    }
+    return undefined;
+  }
+}
+
 class Tuple {
   tuple: TupleType[];
   constructor() {
@@ -113,6 +140,27 @@ class WordPairMap {
 
   constructor() {
     this.map = [];
+  }
+
+  sorted() {
+    const map2 = [...this.map];
+    map2.sort((x, y) => {
+      const cp1 = x.key[0].surface;
+      const cp2 = y.key[1].surface;
+      const cp3 = y.key[0].surface;
+      const cp4 = y.key[1].surface;
+      if (cp1 < cp3) {
+        return 1;
+      } else if (cp1 > cp3) {
+        return -1;
+      } else if (cp2 < cp4) {
+        return 1;
+      } else if (cp2 > cp4) {
+        return -1;
+      }
+      return 0;
+    });
+    return map2;
   }
 
   set(key: [Word, Word], value: number): void {
@@ -298,9 +346,9 @@ export default class TextRank {
       })
       .slice(0, Math.floor(ranks.entries().length * ratio));
     // .map((x) => x); // {surface, tag}
-    console.log(cand);
+    // console.log(cand);
     const pairness: WordPairMap = new WordPairMap();
-    const startOf: WordMap = new WordMap();
+    const startOf: StartOf = new StartOf();
     const tuples: Tuple = new Tuple();
 
     for (const k of cand) {
@@ -317,15 +365,43 @@ export default class TextRank {
         const tag = l.key.tag;
         const lword: Word = { surface, tag };
         const PMI = this.getPMI(word, lword);
-        console.log(PMI, word, lword);
+        // console.log(PMI, word, lword);
         if (PMI !== -1) {
           // pairness[maked] = PMI;
           pairness.set([word, lword], PMI);
-          console.log("^^", word, lword, pairness.get([word, lword]));
+          // console.log("^^", word, lword, pairness.get([word, lword]));
+          // let sortedPairness: WordPairMap = pairness.sort;
         }
       }
     }
     // 이제... for (k, l) in sorted(pairness, key=pairness.get, reverse=True): 작업 해야지
+    const sorted: Pair[] = pairness.sorted();
+    for (let i = 0; i < sorted.length; i++) {
+      const k = sorted[i].key[0];
+      const l = sorted[i].key[1];
+      console.log(k.surface, l.surface, pairness.get([k, l]));
+      if (startOf.get(k) === undefined) startOf.set(k, [k, l]);
+    }
+    const ent = pairness.entries();
+    for (let i = 0; i < ent.length; i++) {
+      const k: Word = ent[i].key[0];
+      const l: Word = ent[i].key[1];
+      const v: number = ent[i].value;
+      const pmis = v;
+      const rgk = ranks.get(k);
+      const rgl = ranks.get(l);
+      if (typeof rgk !== "number" || typeof rgl !== "number") continue;
+      const rs = rgk * rgl;
+      const path = [k, l];
+      tuples.set(
+        path,
+        (pmis / (path.length - 1)) * Math.pow(rs, 1 / path.length) * path.length
+      );
+    //   let last = l;
+    //   while (last in startOf && path.length < 7) {
+    //     //
+    //   }
+    // }
   }
 
   // 빌드랑 랭크를 합친것
