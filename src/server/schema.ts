@@ -36,6 +36,8 @@ export const typeDefs = gql`
     category: Category
     "뉴스 링크"
     url: String
+    "기사 업로드날짜 ISO포맷 문자열"
+    createAt: String
   }
 
   type Query {
