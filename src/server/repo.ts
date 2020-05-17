@@ -8,6 +8,7 @@ export interface NewsArticle {
   category: string;
   keywords: Keyword[];
   url: string;
+  createAt: string;
 }
 
 export const getNewsArticles = (keywords: string[]): NewsArticle[] => {
@@ -15,6 +16,7 @@ export const getNewsArticles = (keywords: string[]): NewsArticle[] => {
     {
       title: "'번호이동·고가요금·제휴카드사용' 충족못하면 '0원폰'없다",
       category: "105",
+      createAt: new Date().toISOString(),
       keywords: [
         {
           value: "판매 장려금",
