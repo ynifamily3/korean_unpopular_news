@@ -387,21 +387,37 @@ export default class TextRank {
       const k: Word = ent[i].key[0];
       const l: Word = ent[i].key[1];
       const v: number = ent[i].value;
-      const pmis = v;
+      let pmis = v;
       const rgk = ranks.get(k);
       const rgl = ranks.get(l);
       if (typeof rgk !== "number" || typeof rgl !== "number") continue;
-      const rs = rgk * rgl;
+      let rs = rgk * rgl;
       const path = [k, l];
       tuples.set(
         path,
         (pmis / (path.length - 1)) * Math.pow(rs, 1 / path.length) * path.length
       );
-    //   let last = l;
-    //   while (last in startOf && path.length < 7) {
-    //     //
-    //   }
-    // }
+      let last: Word = l;
+      // startOf
+      while (startOf.get(last) !== undefined && path.length < 7) {
+        let stop = false;
+        for (let i = 0; i < path.length; i++) {
+          if (path[i].surface === last.surface && path[i].tag === last.tag) {
+            stop = true;
+            break;
+          }
+        }
+        if (stop) break;
+        const startOfLastVal: [Word, Word] = startOf.get(last) || [
+          { surface: "", tag: "" },
+          { surface: "", tag: "" },
+        ];
+        pmis += pairness.get(startOfLastVal) || 0;
+        last = startOf.get(last)[1];
+        rs *= ranks.get(last);
+        path.push(last);
+      }
+    }
   }
 
   // 빌드랑 랭크를 합친것
