@@ -1,5 +1,6 @@
 import { ChunkExtractor } from "@loadable/server";
 import { renderToString } from "react-dom/server";
+import { StaticRouter } from "react-router-dom";
 import path from "path";
 import React from "react";
 
@@ -18,7 +19,12 @@ export default function ssr(req, res): void {
   const { default: App } = nodeExtractor.requireEntrypoint();
 
   const webExtractor = new ChunkExtractor({ statsFile: webStats });
-  const jsx = webExtractor.collectChunks(<App />);
+  const context = {};
+  const jsx = webExtractor.collectChunks(
+    <StaticRouter location={req.url} context={context}>
+      <App />
+    </StaticRouter>
+  );
 
   const html = renderToString(jsx);
 

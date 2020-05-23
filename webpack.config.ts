@@ -25,7 +25,7 @@ const getConfig = (
   name: target,
   mode: development ? "development" : "production",
   target,
-  entry: `./src/client/main-${target}.ts`,
+  entry: `./src/client/main-${target}.tsx`,
   module: {
     rules: [
       {

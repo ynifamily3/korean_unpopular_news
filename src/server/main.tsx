@@ -28,7 +28,7 @@ if (process.env.NODE_ENV !== "production") {
         publicPath: "/dist/web",
         writeToDisk(filePath) {
           return (
-            /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath)
+            /dist\/web\//.test(filePath) || /loadable-stats/.test(filePath)
           );
         },
       })
