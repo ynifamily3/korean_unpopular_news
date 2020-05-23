@@ -12,7 +12,7 @@ const App = (): JSX.Element => {
         path="/"
         render={(): JSX.Element => (
           <div>
-            메인페이지<Link to="/about">어바웃페이지가기</Link>
+            공통메인페이지부분입니다.<Link to="/about">어바웃보여주기</Link>
           </div>
         )}
       />

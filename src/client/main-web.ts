@@ -8,9 +8,11 @@ import { BrowserRouter } from "react-router-dom";
 loadableReady(() => {
   const root = document.getElementById("main");
   hydrate(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>,
+    React.createElement(
+      BrowserRouter,
+      null,
+      React.createElement(App, null, null)
+    ),
     root
   );
 });
