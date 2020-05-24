@@ -10,27 +10,27 @@ const Top = (): JSX.Element => {
     },
     {
       section: "정치",
-      link: "/politics",
+      link: "/POLITICS",
     },
     {
       section: "경제",
-      link: "/economy",
+      link: "/ECONOMY",
     },
     {
       section: "사회",
-      link: "/social",
+      link: "/SOCIAL",
     },
     {
-      section: "IT",
-      link: "/it",
+      section: "IT/과학",
+      link: "/SCIENCE",
     },
     {
-      section: "생활",
-      link: "/life",
+      section: "생활/문화",
+      link: "/LIFE",
     },
     {
       section: "세계",
-      link: "/world",
+      link: "/WORLD",
     },
   ];
   const location = useLocation();

@@ -1,7 +1,32 @@
 import React, { CSSProperties } from "react";
 import clsx from "clsx";
 
-const Card = (): JSX.Element => {
+export interface CardProps {
+  title: string;
+  url: string;
+  createAt: string;
+  category: string;
+  keywords: {
+    value: string;
+    weight: number;
+  }[];
+}
+
+function Card(props: CardProps): JSX.Element {
+  const sections = {};
+  sections["POLITICS"] = "IT/과학";
+  sections["ECONOMY"] = "경제";
+  sections["SOCIAL"] = "사회";
+  sections["SCIENCE"] = "IT/과학";
+  sections["LIFE"] = "생활/문화";
+  sections["WORLD"] = "세계";
+  const { title, url, createAt, category, keywords } = props;
+  const dateFormat = new Date(createAt);
+  const year = dateFormat.getFullYear();
+  const month = dateFormat.getMonth() + 1;
+  const date = dateFormat.getDate();
+  const time = dateFormat.getHours() + ":" + dateFormat.getMinutes();
+
   const cardStyle: CSSProperties = {
     maxWidth: "720px",
     margin: "0 auto",
@@ -47,21 +72,29 @@ const Card = (): JSX.Element => {
         />
       </div>
       <div style={cardColumn}>
-        <h3>뉴스 제목 </h3>
+        <h3>
+          <a href={url} target="_blank" rel="noreferrer noopener">
+            {title}
+          </a>
+        </h3>
+        <h4>{sections[category]}</h4>
+        <h5>{`${year}/${month}/${date} ${time}`}</h5>
         <p>
-          <button className="pure-button" style={keywordButton}>
-            키워드 1
-          </button>
-          <button className="pure-button" style={keywordButton}>
-            키워드 2
-          </button>
-          <button className="pure-button" style={keywordButton}>
-            키워드 3
-          </button>
+          {keywords.map((keyword, i) => {
+            return (
+              <button
+                key={url + "-" + i}
+                className="pure-button"
+                style={keywordButton}
+              >
+                {keyword.value}
+              </button>
+            );
+          })}
         </p>
       </div>
     </div>
   );
-};
+}
 
 export default Card;
