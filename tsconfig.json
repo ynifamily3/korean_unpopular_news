@@ -20,6 +20,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "jsx": "react"
   },
   "include": ["src/**/*"]

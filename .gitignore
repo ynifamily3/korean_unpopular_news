@@ -1,3 +1,6 @@
 public/dist
 node_modules
 yarn-error.log
+.ormconfig.env
+docker-compose.yml
+lib
