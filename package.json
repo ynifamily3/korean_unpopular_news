@@ -5,13 +5,15 @@
     "dev": "nodemon src/server/main.tsx",
     "build": "NODE_ENV=production yarn build:webpack && yarn build:lib",
     "build:webpack": "webpack",
-    "build:lib": "babel -d lib src",
+    "build:lib": "babel -d lib --extensions \".ts,.tsx,.js,.jsx\" src",
     "start": "NODE_ENV=production node lib/server/main.js",
     "lint": "eslint --ext .ts --ext .tsx .",
     "parse": "node -r esm src/news-crawler/parser.js"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
@@ -24,7 +26,7 @@
     "@types/loadable__server": "^5.12.1",
     "@types/loadable__webpack-plugin": "^5.7.0",
     "@types/mini-css-extract-plugin": "^0.9.1",
-    "@types/node": "^13.13.4",
+    "@types/node": "^14.0.5",
     "@types/webpack-dev-middleware": "^3.7.0",
     "@types/webpack-node-externals": "^1.7.1",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
@@ -42,6 +44,7 @@
     "ts-node": "^8.9.1",
     "typescript": "^3.8.3",
     "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-node-externals": "^1.7.2"
   },
@@ -59,6 +62,7 @@
     "node-fetch": "^2.6.0",
     "node-html-parser": "^1.2.16",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "reflect-metadata": "^0.1.13"
   }
 }

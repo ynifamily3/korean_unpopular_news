@@ -28,6 +28,7 @@ module.exports = (api) => {
       "@babel/plugin-syntax-dynamic-import",
       "@loadable/babel-plugin",
       "@babel/plugin-transform-runtime",
+      ["@babel/plugin-proposal-decorators", { legacy: true }],
     ],
   };
 };
