@@ -36,7 +36,8 @@ function Card(props: CardProps): JSX.Element {
     justifyContent: "space-between",
     alignItems: "flex-start",
     flexWrap: "wrap",
-    marginBottom: "50px",
+    marginBottom: "25px",
+    marginTop: "25px",
     textOverflow: "ellipsis",
     padding: "0 20px",
     boxShadow: "0 8px 38px rgba(133, 133, 133, 0.3), 0 5px 12px #85858538",
@@ -77,7 +78,7 @@ function Card(props: CardProps): JSX.Element {
             {title}
           </a>
         </h3>
-        <h4>{sections[category]}</h4>
+        <h4>{sections[category] ? sections[category] : "(기타)"}</h4>
         <h5>{`${year}/${month}/${date} ${time}`}</h5>
         <p>
           {keywords.map((keyword, i) => {

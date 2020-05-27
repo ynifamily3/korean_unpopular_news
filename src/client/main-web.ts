@@ -1,9 +1,9 @@
 import { hydrate } from "react-dom";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { loadableReady } from "@loadable/component";
-import App from "./App";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
+import AppContainer from "./AppContainer";
 
 loadableReady(() => {
   const root = document.getElementById("main");
@@ -11,7 +11,7 @@ loadableReady(() => {
     React.createElement(
       BrowserRouter,
       null,
-      React.createElement(App, null, null)
+      React.createElement(AppContainer, null, null)
     ),
     root
   );

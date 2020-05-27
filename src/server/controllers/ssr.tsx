@@ -4,6 +4,7 @@ import { StaticRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import path from "path";
 import React from "react";
+// import AppContainer from "../../client/AppContainer";
 
 export default function ssr(req, res): void {
   const nodeStats = path.resolve(
@@ -17,13 +18,13 @@ export default function ssr(req, res): void {
   );
 
   const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
-  const { default: App } = nodeExtractor.requireEntrypoint();
+  const { default: AppContainer } = nodeExtractor.requireEntrypoint();
 
   const webExtractor = new ChunkExtractor({ statsFile: webStats });
   const context = {};
   const jsx = webExtractor.collectChunks(
     <StaticRouter location={req.url} context={context}>
-      <App />
+      <AppContainer />
     </StaticRouter>
   );
 
