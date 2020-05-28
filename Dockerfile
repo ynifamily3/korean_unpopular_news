@@ -14,5 +14,7 @@ COPY . .
 
 RUN yarn build
 
+RUN echo '*/5  *  *  *  *    cd /usr/src/app && yarn crawler' > /etc/crontabs/root
+
 EXPOSE 9000
 CMD [ "yarn", "start" ]

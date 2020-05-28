@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  Unique,
+} from "typeorm";
 import { Keyword } from "./Keyword";
 
 export enum Category {
@@ -11,9 +17,13 @@ export enum Category {
 }
 
 @Entity()
+@Unique(["aid"])
 export class NewsArticle {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ nullable: true })
+  aid?: string;
 
   @Column()
   title: string;
@@ -24,7 +34,7 @@ export class NewsArticle {
   @Column("datetime")
   createdAt: Date;
 
-  @OneToMany((type) => Keyword, (keyword) => keyword.newsArticle)
+  @OneToMany(() => Keyword, (keyword) => keyword.newsArticle)
   keywords: Keyword[];
 
   @Column({
