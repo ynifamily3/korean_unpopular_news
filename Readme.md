@@ -34,6 +34,7 @@
       environment:
         - MYSQL_ROOT_PASSWORD=[db password]
         - MYSQL_DATABASE=undertimes
+        - TZ=Asia/Seoul
       command:
         [
           "mysqld",
