@@ -12,6 +12,6 @@ export class Keyword {
   @Column()
   weight: number;
 
-  @ManyToOne((type) => NewsArticle, (newsArticle) => newsArticle.keywords)
+  @ManyToOne(() => NewsArticle, (newsArticle) => newsArticle.keywords)
   newsArticle: NewsArticle;
 }

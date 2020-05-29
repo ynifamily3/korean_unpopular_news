@@ -31,6 +31,9 @@ export class NewsArticle {
   @Column()
   url: string;
 
+  @Column({ nullable: true })
+  img?: string;
+
   @Column("datetime")
   createdAt: Date;
 
