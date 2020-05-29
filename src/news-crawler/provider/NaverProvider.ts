@@ -60,11 +60,15 @@ export default class NaverProvider implements INewsProvider {
     );
     const match = res.data.match(re);
     let content: string = match.groups.content;
+    const imgMatch = content.match(
+      /<span class="end_photo_org"><img src="(?<imgSrc>.*?)"/i
+    );
     content = content
       .replace(/<[^>]*>/g, " ")
       .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
       .trim();
     article.content = content;
+    article.img = imgMatch?.groups?.imgSrc;
     article.createdAt = new Date(match.groups.date);
   }
 }

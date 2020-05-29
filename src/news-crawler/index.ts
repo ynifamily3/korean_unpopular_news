@@ -53,6 +53,7 @@ async function crawlCategory(db: Connection, category: string): Promise<void> {
       article.createdAt = articleRaw.createdAt;
       article.title = articleRaw.title;
       article.url = articleRaw.url;
+      article.img = articleRaw.img;
       article.keywords = await Promise.all(
         keywords.map(async (k) => {
           const keyword = new Keyword();
