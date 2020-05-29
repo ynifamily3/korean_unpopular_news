@@ -70,6 +70,7 @@ async function crawlCategory(db: Connection, category: string): Promise<void> {
 initialize({
   packages: { KMR: "2.1.4" },
   verbose: false,
+  javaOptions: ["-Xmx8g", "-Dfile.encoding=utf-8"],
 }).then(() => {
   for (const key in Category) {
     createConnection().then((db: Connection) =>
