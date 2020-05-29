@@ -35,7 +35,7 @@ async function crawlCategory(db: Connection, category: string): Promise<void> {
     const findAid = await db.manager.findOne(NewsArticle, {
       aid,
     });
-    if (findAid) break;
+    if (findAid) continue;
 
     if (!articleRaw.content) await provider.fillContent(articleRaw);
 
@@ -61,7 +61,11 @@ async function crawlCategory(db: Connection, category: string): Promise<void> {
           return await db.manager.save(keyword);
         })
       );
-      await db.manager.save(article);
+      try {
+        await db.manager.save(article);
+      } catch {
+        continue;
+      }
       console.log(`[${category}] 등록됨: ${article.title}`);
     }
   }
