@@ -7,7 +7,9 @@ import ApolloClient, { gql } from "apollo-boost";
 
 const Main = (): JSX.Element => {
   const [newses, setNewses] = useState<CardProps[]>([]);
-  const client = new ApolloClient();
+  const client = new ApolloClient({
+    uri: "https://undertimes.alien.moe/graphql",
+  });
   useEffect(() => {
     client
       .query({

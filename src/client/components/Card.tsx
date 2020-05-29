@@ -1,5 +1,8 @@
 import React, { CSSProperties } from "react";
-import clsx from "clsx";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
+
+import Chip from "@material-ui/core/Chip";
 
 export interface CardProps {
   title: string;
@@ -59,9 +62,21 @@ function Card(props: CardProps): JSX.Element {
     maxHeight: "256px",
   };
 
-  const keywordButton: CSSProperties = {
-    marginRight: "1em",
-  };
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      display: "flex",
+      justifyContent: "center",
+      flexWrap: "wrap",
+      "& > *": {
+        margin: theme.spacing(0.5),
+      },
+    },
+    keywordsT: {
+      display: "flex",
+      alignItems: "center",
+    },
+  }));
+  const classes = useStyles();
 
   return (
     <div style={cardStyle}>
@@ -80,19 +95,12 @@ function Card(props: CardProps): JSX.Element {
         </h3>
         <h4>{sections[category] ? sections[category] : "(기타)"}</h4>
         <h5>{`${year}/${month}/${date} ${time}`}</h5>
-        <p>
+        <div className={classes.root}>
+          <Typography className={classes.keywordsT}>Keywords : </Typography>
           {keywords.map((keyword, i) => {
-            return (
-              <button
-                key={url + "-" + i}
-                className="pure-button"
-                style={keywordButton}
-              >
-                {keyword.value}
-              </button>
-            );
+            return <Chip key={url + "-" + i} label={keyword.value} />;
           })}
-        </p>
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { StaticRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import path from "path";
 import React from "react";
-// import AppContainer from "../../client/AppContainer";
+import { ServerStyleSheets, ThemeProvider } from "@material-ui/core/styles";
 
 export default function ssr(req, res): void {
   const nodeStats = path.resolve(
@@ -22,14 +22,19 @@ export default function ssr(req, res): void {
 
   const webExtractor = new ChunkExtractor({ statsFile: webStats });
   const context = {};
+
+  const sheets = new ServerStyleSheets();
+
   const jsx = webExtractor.collectChunks(
     <StaticRouter location={req.url} context={context}>
       <AppContainer />
     </StaticRouter>
   );
 
-  const html = renderToString(jsx);
+  const html = renderToString(sheets.collect(jsx));
   const helmet = Helmet.renderStatic();
+  // Grab the CSS from the sheets.
+  const css = sheets.toString();
 
   res.set("content-type", "text/html");
   res.send(`
@@ -39,6 +44,7 @@ export default function ssr(req, res): void {
           ${webExtractor.getLinkTags()}
           ${webExtractor.getStyleTags()}
           ${helmet.title.toString()}
+          <style id="jss-server-side">${css}</style>
           <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
