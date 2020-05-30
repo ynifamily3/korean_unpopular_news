@@ -33,7 +33,7 @@ const Top = (): JSX.Element => {
   const renderTree = [
     {
       section: "홈",
-      link: "/",
+      link: "/ALL",
     },
     {
       section: "정치",

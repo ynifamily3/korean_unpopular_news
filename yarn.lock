@@ -1482,6 +1482,13 @@
     "@types/koa-compose" "*"
     "@types/node" "*"
 
+"@types/loadable__component@^5.10.0":
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/@types/loadable__component/-/loadable__component-5.10.0.tgz#178fdc401983f4f93647fac778226da7b8c1e080"
+  integrity sha512-AaDP1VxV3p7CdPOtOTl3ALgQ6ES4AxJKO9UGj9vJonq/w2yERxwdzFiWNQFh9fEDXEzjxujBlM2RmSJtHV1/pA==
+  dependencies:
+    "@types/react" "*"
+
 "@types/loadable__server@^5.12.1":
   version "5.12.2"
   resolved "https://registry.yarnpkg.com/@types/loadable__server/-/loadable__server-5.12.2.tgz#c87ef21fbd38d095828e153a345eb6752beb74c9"

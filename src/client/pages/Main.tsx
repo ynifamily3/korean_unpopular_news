@@ -5,8 +5,13 @@ import Card, { CardProps } from "../components/Card";
 import "cross-fetch/polyfill";
 import ApolloClient, { gql } from "apollo-boost";
 
-const Main = (): JSX.Element => {
+interface MainProps {
+  section?: string;
+}
+
+const Main = (props: MainProps): JSX.Element => {
   const [newses, setNewses] = useState<CardProps[]>([]);
+  const { section } = props;
   const client = new ApolloClient({
     uri: "https://undertimes.alien.moe/graphql",
   });
@@ -36,7 +41,7 @@ const Main = (): JSX.Element => {
   return (
     <div className="App">
       <Helmet>
-        <title>UnderTimes</title>
+        <title>UnderTimes {section}</title>
       </Helmet>
       {newses.map((news, i) => {
         return <Card key={"news-" + i} {...news} />;

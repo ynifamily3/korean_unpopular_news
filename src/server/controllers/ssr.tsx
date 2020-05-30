@@ -4,7 +4,7 @@ import { StaticRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import path from "path";
 import React from "react";
-import { ServerStyleSheets, ThemeProvider } from "@material-ui/core/styles";
+import { ServerStyleSheets } from "@material-ui/core/styles";
 
 export default function ssr(req, res): void {
   const nodeStats = path.resolve(
