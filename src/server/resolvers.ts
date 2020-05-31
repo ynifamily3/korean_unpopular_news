@@ -1,8 +1,9 @@
 import { Resolver, Query, ArgsType, Field, Int, Args, ID } from "type-graphql";
 import { NewsArticle } from "../database/entity/NewsArticle";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Repository, Between, In, MoreThan } from "typeorm";
+import { Repository, Between } from "typeorm";
 import { Min } from "class-validator";
+import { Keyword } from "../database/entity/Keyword";
 
 @ArgsType()
 class NewsArticlesArgs {
@@ -25,8 +26,11 @@ class NewsArticlesArgs {
   @Field(() => Boolean, { description: "최신순 정렬" })
   desc = true;
 
-  @Field(() => [String], { description: "키워드 필터" })
-  keywords: string[] = [];
+  @Field(() => [String], { description: "포함 키워드 필터" })
+  include_keywords: string[] = [];
+
+  @Field(() => [String], { description: "제외 키워드 필터" })
+  exclude_keywords: string[] = [];
 }
 
 @Resolver()
@@ -38,15 +42,59 @@ export class NewsResolver {
 
   @Query(() => [NewsArticle])
   async newsArticles(
-    @Args() { limit, start, end, desc, keywords, offset }: NewsArticlesArgs
+    @Args()
+    {
+      limit,
+      start,
+      end,
+      desc,
+      include_keywords,
+      exclude_keywords,
+      offset,
+    }: NewsArticlesArgs
   ): Promise<NewsArticle[]> {
-    const qb = this.newsRepo
-      .createQueryBuilder("news")
-      .innerJoinAndSelect("news.keywords", "keywords")
-      .where({
-        createdAt: Between<Date>(start, end || new Date()),
-      })
-      .orderBy("news.createdAt", desc ? "DESC" : "ASC");
+    const qb = this.newsRepo.createQueryBuilder("news").where({
+      createdAt: Between(start, end || new Date()),
+    });
+
+    if (include_keywords.length > 0)
+      qb.andWhere((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select("keyword.newsArticleId")
+          .from(Keyword, "keyword")
+          .where("keyword.value IN (:...include_keywords)", {
+            include_keywords,
+          })
+          .groupBy("keyword.newsArticleId")
+          .having("COUNT(keyword.newsArticleId) >= :len", {
+            len: include_keywords.length,
+          })
+          .getQuery();
+        return "news.id IN " + subQuery;
+      });
+
+    if (exclude_keywords.length > 0)
+      qb.andWhere((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select("keyword.newsArticleId")
+          .from(Keyword, "keyword")
+          .where("keyword.value IN (:...exclude_keywords)", {
+            exclude_keywords,
+          })
+          .groupBy("keyword.newsArticleId")
+          .having("COUNT(keyword.newsArticleId) >= :len", {
+            len: exclude_keywords.length,
+          })
+          .getQuery();
+        return "news.id NOT IN " + subQuery;
+      });
+
+    qb.innerJoinAndSelect("news.keywords", "keywords").orderBy(
+      "news.createdAt",
+      desc ? "DESC" : "ASC"
+    );
 
     if (offset) qb.andWhere("news.id > :offset", { offset });
 
