@@ -83,10 +83,7 @@ export class NewsResolver {
           .where("keyword.value IN (:...exclude_keywords)", {
             exclude_keywords,
           })
-          .groupBy("keyword.newsArticleId")
-          .having("COUNT(keyword.newsArticleId) >= :len", {
-            len: exclude_keywords.length,
-          })
+          .andWhere("keyword.newsArticleId IS NOT NULL")
           .getQuery();
         return "news.id NOT IN " + subQuery;
       });
