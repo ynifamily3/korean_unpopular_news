@@ -26,6 +26,7 @@ const getConfig = (
   mode: development ? "development" : "production",
   target,
   entry: `./src/client/main-${target}.ts`,
+  devtool: "#inline-source-map",
   module: {
     rules: [
       {
