@@ -18,15 +18,9 @@ export default class NaverProvider implements INewsProvider {
     ],
   });
 
-  async getNewsArticles(
-    category: Category,
-    page: number,
-    date: Date
-  ): Promise<INewsArticle[]> {
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const dateformat = `${date.getFullYear()}${month}${date.getDate()}`;
+  async getNewsArticles(category: Category): Promise<INewsArticle[]> {
     const res = await this.instance.get(
-      `/list.nhn?mode=LSD&mid=sec&sid1=${category}&listType=title&date=${dateformat}&page=${page}`
+      `/list.nhn?mode=LSD&mid=sec&sid1=${category}&listType=title`
     );
     const re = /<li >.*?<a href=".*?&oid=(?<oid>.*?)&aid=(?<aid>.*?)"class.*?>(?<title>.*?)<\/a>.*?<\/li>/gs;
     const matches = res.data.matchAll(re);

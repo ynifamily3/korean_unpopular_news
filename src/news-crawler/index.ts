@@ -24,9 +24,7 @@ async function crawlCategory(db: Connection, category: string): Promise<void> {
   const rank = new TextRank(2);
   const provider: INewsProvider = new NaverProvider();
   const articles: INewsArticle[] = await provider.getNewsArticles(
-    Category[category],
-    1,
-    new Date()
+    Category[category]
   );
   for (const articleRaw of articles) {
     let aid: string | undefined;
