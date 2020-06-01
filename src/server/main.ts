@@ -7,9 +7,9 @@ import * as TypeORM from "typeorm";
 import { Container } from "typedi";
 import * as TypeGraphQL from "type-graphql";
 import { NewsResolver } from "./resolvers";
-
+console.log("test1");
 TypeORM.useContainer(Container);
-
+console.log("test2");
 async function bootstrap() {
   try {
     const app = express();
