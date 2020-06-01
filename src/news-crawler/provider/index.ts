@@ -10,10 +10,6 @@ export interface INewsArticle {
 }
 
 export interface INewsProvider {
-  getNewsArticles(
-    category: Category,
-    page: number,
-    date: Date
-  ): Promise<INewsArticle[]>;
+  getNewsArticles(category: Category): Promise<INewsArticle[]>;
   fillContent(article: INewsArticle): Promise<void>;
 }
