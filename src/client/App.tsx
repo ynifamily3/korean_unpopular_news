@@ -11,7 +11,7 @@ const About = loadable(() =>
   import(/* webpackChunkName: "About" */ "./pages/About")
 );
 
-const renderTree = [
+export const Categories = [
   {
     section: "홈",
     link: "/ALL",
@@ -48,7 +48,7 @@ const App = (): JSX.Element => {
       <Top />
       <Switch>
         <Redirect exact path="/" to="/ALL" />
-        {renderTree.map((x) => {
+        {Categories.map((x) => {
           return (
             <Route
               key={x.link}
