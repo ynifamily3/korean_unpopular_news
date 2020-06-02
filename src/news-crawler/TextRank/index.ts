@@ -1,5 +1,10 @@
 import TextRankGraph from "./TextRankGraph";
 
+export interface IKeyword {
+  weight: number;
+  value: string;
+}
+
 export interface Word {
   surface: string;
   tag: string;
@@ -71,7 +76,7 @@ export default class TextRank {
     this.w = windowSize;
   }
 
-  extractKeywords(wordList: Word[], numKeywords: number): [string, number][] {
+  extractKeywords(wordList: Word[], numKeywords: number): IKeyword[] {
     const g = new TextRankGraph();
     const cm = new WordPair();
     for (let i = 0; i < wordList.length; ++i) {
@@ -100,6 +105,10 @@ export default class TextRank {
     }
     return Array.from(g.rank().entries())
       .sort((a, b) => b[1] - a[1])
-      .slice(0, numKeywords);
+      .slice(0, numKeywords)
+      .map(([value, weight]) => ({
+        value,
+        weight,
+      }));
   }
 }
