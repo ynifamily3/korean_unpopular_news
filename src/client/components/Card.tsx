@@ -3,7 +3,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import { NewsArticle, KeywordsIE } from "../pages/Main";
 import { useLocation, useHistory } from "react-router-dom";
-import queryString from "query-string";
 
 import Chip from "@material-ui/core/Chip";
 
@@ -17,13 +16,17 @@ function Card(props: NewsArticle & KeywordsIE): JSX.Element {
   sections["SCIENCE"] = "IT/과학";
   sections["LIFE"] = "생활/문화";
   sections["WORLD"] = "세계";
-  const { title, url, img, createdAt, keywords, category } = props;
+  const { title, url, img, createdAt, keywords, category, id } = props;
   const { includeKeywords, excludeKeywords } = props;
   const dateFormat = new Date(createdAt);
   const year = dateFormat.getFullYear();
   const month = dateFormat.getMonth() + 1;
   const date = dateFormat.getDate();
-  const time = dateFormat.getHours() + ":" + dateFormat.getMinutes();
+  const time =
+    dateFormat.getHours() +
+    ":" +
+    (dateFormat.getMinutes() < 10 ? "0" : "") +
+    dateFormat.getMinutes();
   const handleClick = (keyword: string) => (): void => {
     let includeParam = includeKeywords.join("|");
     const excludeParam = excludeKeywords.join("|");
@@ -115,7 +118,7 @@ function Card(props: NewsArticle & KeywordsIE): JSX.Element {
       <div style={cardColumn}>
         <h3>
           <a href={url} target="_blank" rel="noreferrer noopener">
-            {title}
+            {id} - {title}
           </a>
         </h3>
         <h4>{sections[category] ? sections[category] : "(기타)"}</h4>
