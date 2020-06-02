@@ -49,6 +49,7 @@ async function crawlCategory(db: Connection, category: string): Promise<void> {
       const article: NewsArticle = new NewsArticle();
       article.aid = aid;
       article.createdAt = articleRaw.createdAt;
+      article.category = articleRaw.category;
       article.title = articleRaw.title;
       article.url = articleRaw.url;
       article.img = articleRaw.img;

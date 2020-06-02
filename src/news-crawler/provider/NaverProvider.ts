@@ -29,6 +29,7 @@ export default class NaverProvider implements INewsProvider {
     for (const m of matches) {
       const url = `${this.instance.defaults.baseURL}read.nhn?oid=${m.groups.oid}&aid=${m.groups.aid}`;
       articles.push({
+        category,
         provider: "naver",
         title: <string>(
           m.groups.title.replace(/&#(\d+);/g, (_, dec) =>
