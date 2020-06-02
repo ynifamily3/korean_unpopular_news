@@ -1,14 +1,15 @@
 import { Resolver, Query, ArgsType, Field, Int, Args, ID } from "type-graphql";
-import { NewsArticle, Category } from "../database/entity/NewsArticle";
+import { NewsArticle, Category } from "../../database/entity/NewsArticle";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository, Between } from "typeorm";
-import { Min } from "class-validator";
-import { Keyword } from "../database/entity/Keyword";
+import { Min, Max } from "class-validator";
+import { Keyword } from "../../database/entity/Keyword";
 
 @ArgsType()
 class NewsArticlesArgs {
   @Field(() => Int, { description: "가져올 개수" })
   @Min(1)
+  @Max(50)
   limit = 15;
 
   @Field(() => ID, {
@@ -59,8 +60,10 @@ export class NewsResolver {
   ): Promise<NewsArticle[]> {
     const qb = this.newsRepo.createQueryBuilder("news").where({
       createdAt: Between(start, end || new Date()),
-      category,
     });
+
+    offset && qb.andWhere("news.id > :offset", { offset });
+    category && qb.andWhere("news.category = :category", { category });
 
     if (include_keywords.length > 0)
       qb.andWhere((qb) => {
@@ -93,14 +96,9 @@ export class NewsResolver {
         return "news.id NOT IN " + subQuery;
       });
 
-    qb.innerJoinAndSelect("news.keywords", "keywords").orderBy(
-      "news.createdAt",
-      desc ? "DESC" : "ASC"
-    );
-
-    if (offset) qb.andWhere("news.id > :offset", { offset });
-
-    qb.take(limit);
+    qb.innerJoinAndSelect("news.keywords", "keywords")
+      .orderBy("news.createdAt", desc ? "DESC" : "ASC")
+      .take(limit);
 
     return qb.getMany();
   }

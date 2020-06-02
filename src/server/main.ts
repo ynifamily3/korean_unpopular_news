@@ -6,10 +6,11 @@ import { ApolloServer } from "apollo-server-express";
 import * as TypeORM from "typeorm";
 import { Container } from "typedi";
 import * as TypeGraphQL from "type-graphql";
-import { NewsResolver } from "./resolvers";
-console.log("test1");
+import { NewsResolver } from "./resolvers/news-resolver";
+import { KeywordResolver } from "./resolvers/keyword-resolver";
+
 TypeORM.useContainer(Container);
-console.log("test2");
+
 async function bootstrap() {
   try {
     const app = express();
@@ -17,7 +18,7 @@ async function bootstrap() {
     await TypeORM.createConnection();
 
     const schema = await TypeGraphQL.buildSchema({
-      resolvers: [NewsResolver],
+      resolvers: [NewsResolver, KeywordResolver],
       container: Container,
       dateScalarMode: "isoDate",
     });
