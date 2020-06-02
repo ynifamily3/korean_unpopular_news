@@ -16,6 +16,10 @@ export class Keyword {
   @Column()
   weight: number;
 
+  @Field({ description: "기사 업로드날짜 ISO포맷 문자열" })
+  @Column("datetime")
+  createdAt: Date;
+
   @ManyToOne(() => NewsArticle, (newsArticle) => newsArticle.keywords)
   newsArticle: NewsArticle;
 }
