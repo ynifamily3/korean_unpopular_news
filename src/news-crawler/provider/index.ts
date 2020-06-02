@@ -7,6 +7,7 @@ export interface INewsArticle {
   img?: string;
   createdAt: Date | null;
   content: string | null;
+  category: Category;
 }
 
 export interface INewsProvider {

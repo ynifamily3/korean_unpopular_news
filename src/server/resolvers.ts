@@ -1,5 +1,5 @@
 import { Resolver, Query, ArgsType, Field, Int, Args, ID } from "type-graphql";
-import { NewsArticle } from "../database/entity/NewsArticle";
+import { NewsArticle, Category } from "../database/entity/NewsArticle";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { Repository, Between } from "typeorm";
 import { Min } from "class-validator";
@@ -31,6 +31,9 @@ class NewsArticlesArgs {
 
   @Field(() => [String], { description: "제외 키워드 필터" })
   exclude_keywords: string[] = [];
+
+  @Field(() => Category, { nullable: true, description: "카테고리" })
+  category?: Category;
 }
 
 @Resolver()
@@ -51,10 +54,12 @@ export class NewsResolver {
       include_keywords,
       exclude_keywords,
       offset,
+      category,
     }: NewsArticlesArgs
   ): Promise<NewsArticle[]> {
     const qb = this.newsRepo.createQueryBuilder("news").where({
       createdAt: Between(start, end || new Date()),
+      category,
     });
 
     if (include_keywords.length > 0)
