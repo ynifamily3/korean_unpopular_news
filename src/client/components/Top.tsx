@@ -1,17 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useHistory } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import { Categories } from "../App";
 import queryString from "query-string";
-import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
+import ApolloClient, { gql } from "apollo-boost";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
   },
@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme) => ({
 const Top = (): JSX.Element => {
   const history = useHistory();
   const classes = useStyles();
+  const [optionKeywords, setOptionKeywords] = useState<string[]>([]);
+  const [optionsLoaded, setOptionsLoaded] = useState<boolean>(false);
   const sections = new Map<string, string>();
   sections["ALL"] = "전체뉴스";
   sections["POLITICS"] = "정치";
@@ -51,6 +53,10 @@ const Top = (): JSX.Element => {
   sections["SCIENCE"] = "IT/과학";
   sections["LIFE"] = "생활/문화";
   sections["WORLD"] = "세계";
+
+  const client = new ApolloClient({
+    uri: "https://undertimes.alien.moe/graphql",
+  });
 
   const location = useLocation();
   const query = queryString.parse(location.search);
@@ -72,6 +78,24 @@ const Top = (): JSX.Element => {
     const exclude = value.join("|");
     history.push(`${location.pathname}?include=${include2}&exclude=${exclude}`);
   };
+
+  useEffect(() => {
+    client
+      .query({
+        query: gql`
+          {
+            keywords(minWeight: 0.5, limit: 20) {
+              value
+            }
+          }
+        `,
+      })
+      .then((result) => {
+        setOptionKeywords(result.data.keywords.map((x) => x.value));
+        setOptionsLoaded(true);
+      });
+  }, [location]);
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -97,10 +121,11 @@ const Top = (): JSX.Element => {
             })}
           </Breadcrumbs>
           <Autocomplete
+            disabled={!optionsLoaded}
             multiple
             id="include"
             className={classes.fullWidth}
-            options={include}
+            options={optionKeywords}
             getOptionLabel={(arr): string => arr}
             value={include}
             onChange={handleChangeInclude(exclude)}
@@ -114,10 +139,11 @@ const Top = (): JSX.Element => {
             )}
           />
           <Autocomplete
+            disabled={!optionsLoaded}
             multiple
             id="exclude"
             className={classes.fullWidth}
-            options={exclude}
+            options={optionKeywords}
             getOptionLabel={(arr): string => arr}
             value={exclude}
             onChange={handleChangeExclude(include)}
