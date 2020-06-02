@@ -102,9 +102,14 @@ const Main = (props: MainProps): JSX.Element => {
               },
               start: "2020-05-31T00:00:00.000Z",
               # end: "2020-06-01T00:00:00.000Z",
-              limit: 1,
+              limit: 3,
               include_keywords: ${makeArrStr(include)},
-              exclude_keywords: ${makeArrStr(exclude)}
+              exclude_keywords: ${makeArrStr(exclude)},
+              ${
+                location.pathname !== "/ALL"
+                  ? `category: ${location.pathname.substr(1)}`
+                  : ""
+              }
             ) {
               id
               title
@@ -138,9 +143,14 @@ const Main = (props: MainProps): JSX.Element => {
               offset: 0,
               start: "2020-05-31T00:00:00.000Z",
               # end: "2020-06-01T00:00:00.000Z",
-              limit: 1,
+              limit: 3,
               include_keywords: ${makeArrStr(include)},
-              exclude_keywords: ${makeArrStr(exclude)}
+              exclude_keywords: ${makeArrStr(exclude)},
+              ${
+                location.pathname !== "/ALL"
+                  ? `category: ${location.pathname.substr(1)}`
+                  : ""
+              }
             ) {
               id
               title
