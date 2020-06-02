@@ -9,6 +9,7 @@ import { Categories } from "../App";
 import queryString from "query-string";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
+import "cross-fetch/polyfill";
 import ApolloClient, { gql } from "apollo-boost";
 
 const useStyles = makeStyles((theme: Theme) => ({
