@@ -11,5 +11,5 @@ import Foundation
 
 class URLManager {
     static var baseURL : URL? = URL(string: baseURLStr)
-    static var baseURLStr = ""
+    static var baseURLStr = "https://undertimes.alien.moe/graphql"
 }
