@@ -59,6 +59,7 @@ export default class NaverProvider implements INewsProvider {
       /<span class="end_photo_org"><img src="(?<imgSrc>.*?)"/i
     );
     content = content
+      .replace(/<a.*?<\/a>/g, "")
       .replace(/<[^>]*>/g, " ")
       .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
       .trim();
