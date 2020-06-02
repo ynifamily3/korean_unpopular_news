@@ -1,0 +1,11 @@
+query {
+  newsArticles(start: "2020-05-31", include_keywords:["주택"], exclude_keywords: ["5호선","국토", "주거"]) {
+    id
+    title
+    url
+    img
+    keywords {
+      value
+    }
+  }
+}
