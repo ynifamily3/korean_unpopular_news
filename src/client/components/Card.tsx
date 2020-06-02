@@ -1,35 +1,62 @@
 import React, { CSSProperties } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
+import { NewsArticle, KeywordsIE } from "../pages/Main";
+import { useLocation, useHistory } from "react-router-dom";
 
 import Chip from "@material-ui/core/Chip";
 
-export interface CardProps {
-  title: string;
-  url: string;
-  createAt: string;
-  category: string;
-  keywords: {
-    value: string;
-    weight: number;
-  }[];
-}
-
-function Card(props: CardProps): JSX.Element {
+function Card(props: NewsArticle & KeywordsIE): JSX.Element {
+  const location = useLocation();
+  const history = useHistory();
   const sections = {};
-  sections["POLITICS"] = "IT/과학";
+  sections["POLITICS"] = "정치";
   sections["ECONOMY"] = "경제";
   sections["SOCIAL"] = "사회";
   sections["SCIENCE"] = "IT/과학";
   sections["LIFE"] = "생활/문화";
   sections["WORLD"] = "세계";
-  const { title, url, createAt, category, keywords } = props;
-  const dateFormat = new Date(createAt);
+  const { title, url, img, createdAt, keywords, category, id } = props;
+  const { includeKeywords, excludeKeywords } = props;
+  const dateFormat = new Date(createdAt);
   const year = dateFormat.getFullYear();
   const month = dateFormat.getMonth() + 1;
   const date = dateFormat.getDate();
-  const time = dateFormat.getHours() + ":" + dateFormat.getMinutes();
-
+  const time =
+    dateFormat.getHours() +
+    ":" +
+    (dateFormat.getMinutes() < 10 ? "0" : "") +
+    dateFormat.getMinutes();
+  const handleClick = (keyword: string) => (): void => {
+    let includeParam = includeKeywords.join("|");
+    const excludeParam = excludeKeywords.join("|");
+    if (!includeKeywords || includeKeywords.length < 1) {
+      includeParam = keyword;
+    } else {
+      includeParam += "|" + keyword;
+    }
+    history.push(
+      location.pathname +
+        "?include=" +
+        includeParam +
+        "&exclude=" +
+        excludeParam
+    );
+  };
+  const handleDelete = (keyword) => (): void => {
+    const includeParams = [...includeKeywords];
+    const idx = includeParams.indexOf(keyword);
+    if (idx > -1) includeParams.splice(idx, 1);
+    const includeParam = includeParams.join("|");
+    const excludeParam = excludeKeywords.join("|");
+    history.push(
+      location.pathname +
+        "?include=" +
+        includeParam +
+        "&exclude=" +
+        excludeParam
+    );
+  };
   const cardStyle: CSSProperties = {
     maxWidth: "720px",
     margin: "0 auto",
@@ -60,6 +87,7 @@ function Card(props: CardProps): JSX.Element {
     boxSizing: "border-box",
     textOverflow: "ellipsis",
     maxHeight: "256px",
+    textAlign: "center",
   };
 
   const useStyles = makeStyles((theme) => ({
@@ -81,24 +109,44 @@ function Card(props: CardProps): JSX.Element {
   return (
     <div style={cardStyle}>
       <div style={cardColumnTop}>
-        <img
-          className="pure-img"
-          style={{ margin: "0 auto", maxHeight: "256px" }}
-          src="https://imgnews.pstatic.net/image/009/2020/05/24/0004580923_001_20200524112901172.jpg?type=w647"
-        />
+        {typeof img === "string" ? (
+          <img style={{ margin: "0 auto", maxHeight: "256px" }} src={img} />
+        ) : (
+          <div>&lt;No Image&gt;</div>
+        )}
       </div>
       <div style={cardColumn}>
         <h3>
           <a href={url} target="_blank" rel="noreferrer noopener">
-            {title}
+            {id} - {title}
           </a>
         </h3>
         <h4>{sections[category] ? sections[category] : "(기타)"}</h4>
         <h5>{`${year}/${month}/${date} ${time}`}</h5>
         <div className={classes.root}>
-          <Typography className={classes.keywordsT}>Keywords : </Typography>
+          <Typography className={classes.keywordsT}>키워드 : </Typography>
           {keywords.map((keyword, i) => {
-            return <Chip key={url + "-" + i} label={keyword.value} />;
+            if (includeKeywords.includes(keyword.value)) {
+              return (
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  key={url + "-" + i}
+                  onDelete={handleDelete(keyword.value)}
+                  label={keyword.value}
+                />
+              );
+            } else {
+              return (
+                <Chip
+                  variant="outlined"
+                  size="small"
+                  key={url + "-" + i}
+                  onClick={handleClick(keyword.value)}
+                  label={keyword.value}
+                />
+              );
+            }
           })}
         </div>
       </div>
