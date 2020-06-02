@@ -7,9 +7,18 @@
 //
 
 import Foundation
-
+import Apollo
 
 class URLManager {
     static var baseURL : URL? = URL(string: baseURLStr)
     static var baseURLStr = "https://undertimes.alien.moe/graphql"
+}
+
+
+class Network {
+  static let shared = Network()
+    
+  private(set) lazy var apollo = ApolloClient(url: URL(string: "https://undertimes.alien.moe/graphql")!)
+    
+    
 }

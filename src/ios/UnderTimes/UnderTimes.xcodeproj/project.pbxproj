@@ -11,6 +11,8 @@
 		497B87EB24820D2E00A6A0AA /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B87EA24820D2E00A6A0AA /* Network.swift */; };
 		49B2D7B02485E77300A0915B /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2D7AF2485E77300A0915B /* ArticleModel.swift */; };
 		49B2D7B22485E95C00A0915B /* ArticleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2D7B12485E95C00A0915B /* ArticleAPI.swift */; };
+		49B2D7B42485F18600A0915B /* ArticleList.graphql in Resources */ = {isa = PBXBuildFile; fileRef = 49B2D7B32485F18600A0915B /* ArticleList.graphql */; };
+		49B2D7B82485FB1D00A0915B /* schema.json in Resources */ = {isa = PBXBuildFile; fileRef = 49B2D7B72485FB1D00A0915B /* schema.json */; };
 		49B416552468556300B2EA91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416542468556300B2EA91 /* AppDelegate.swift */; };
 		49B416572468556300B2EA91 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416562468556300B2EA91 /* SceneDelegate.swift */; };
 		49B416592468556300B2EA91 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416582468556300B2EA91 /* ContentView.swift */; };
@@ -50,6 +52,8 @@
 		497B87EA24820D2E00A6A0AA /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		49B2D7AF2485E77300A0915B /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
 		49B2D7B12485E95C00A0915B /* ArticleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleAPI.swift; sourceTree = "<group>"; };
+		49B2D7B32485F18600A0915B /* ArticleList.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = ArticleList.graphql; sourceTree = "<group>"; };
+		49B2D7B72485FB1D00A0915B /* schema.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = schema.json; sourceTree = "<group>"; };
 		49B416512468556300B2EA91 /* UnderTimes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnderTimes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B416542468556300B2EA91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49B416562468556300B2EA91 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -155,6 +159,7 @@
 		49B416532468556300B2EA91 /* UnderTimes */ = {
 			isa = PBXGroup;
 			children = (
+				49B2D7B72485FB1D00A0915B /* schema.json */,
 				49B416542468556300B2EA91 /* AppDelegate.swift */,
 				49B416562468556300B2EA91 /* SceneDelegate.swift */,
 				49B416582468556300B2EA91 /* ContentView.swift */,
@@ -170,6 +175,7 @@
 				497B87EA24820D2E00A6A0AA /* Network.swift */,
 				49B2D7B12485E95C00A0915B /* ArticleAPI.swift */,
 				49B2D7AF2485E77300A0915B /* ArticleModel.swift */,
+				49B2D7B32485F18600A0915B /* ArticleList.graphql */,
 			);
 			path = UnderTimes;
 			sourceTree = "<group>";
@@ -207,6 +213,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 49B4167B2468556500B2EA91 /* Build configuration list for PBXNativeTarget "UnderTimes" */;
 			buildPhases = (
+				49B2D7B62485F4A300A0915B /* Apollo CLI */,
 				9F30A4F21F17EF2A2C4BB9C7 /* [CP] Check Pods Manifest.lock */,
 				49B4164D2468556300B2EA91 /* Sources */,
 				49B4164E2468556300B2EA91 /* Frameworks */,
@@ -309,6 +316,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49B2D7B42485F18600A0915B /* ArticleList.graphql in Resources */,
+				49B2D7B82485FB1D00A0915B /* schema.json in Resources */,
 				49B416612468556500B2EA91 /* LaunchScreen.storyboard in Resources */,
 				49B4165E2468556500B2EA91 /* Preview Assets.xcassets in Resources */,
 				49B4165B2468556500B2EA91 /* Assets.xcassets in Resources */,
@@ -348,6 +357,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-UnderTimes-UnderTimesUITests/Pods-UnderTimes-UnderTimesUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		49B2D7B62485F4A300A0915B /* Apollo CLI */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Apollo CLI";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCRIPT_PATH=\"${PODS_ROOT}/Apollo/scripts\"\ncd \"${SRCROOT}/${TARGET_NAME}\"\n\"${SCRIPT_PATH}\"/run-bundled-codegen.sh codegen:generate --target=swift --includes=./**/*.graphql --localSchemaFile=\"schema.json\" API.swift\n";
 		};
 		57F366138E5DD8A12B0B99B7 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
