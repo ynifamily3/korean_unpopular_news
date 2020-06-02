@@ -58,6 +58,7 @@ async function crawlCategory(db: Connection, category: string): Promise<void> {
           const keyword = new Keyword();
           keyword.value = k.value;
           keyword.weight = k.weight;
+          keyword.createdAt = article.createdAt;
           return await db.manager.save(keyword);
         })
       );
