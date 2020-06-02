@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		392AC46D9EDEDE6B67901B1F /* Pods_UnderTimes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5221C5DAB544A713E67DF7D0 /* Pods_UnderTimes.framework */; };
+		497B87EB24820D2E00A6A0AA /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B87EA24820D2E00A6A0AA /* Network.swift */; };
 		49B416552468556300B2EA91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416542468556300B2EA91 /* AppDelegate.swift */; };
 		49B416572468556300B2EA91 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416562468556300B2EA91 /* SceneDelegate.swift */; };
 		49B416592468556300B2EA91 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B416582468556300B2EA91 /* ContentView.swift */; };
@@ -44,6 +45,7 @@
 
 /* Begin PBXFileReference section */
 		2F82593718801EC969B08961 /* Pods_UnderTimes_UnderTimesUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnderTimes_UnderTimesUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		497B87EA24820D2E00A6A0AA /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		49B416512468556300B2EA91 /* UnderTimes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnderTimes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B416542468556300B2EA91 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		49B416562468556300B2EA91 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -121,7 +123,6 @@
 				D8884E849C54B751D36A29E6 /* Pods-UnderTimesTests.debug.xcconfig */,
 				4A25A11E60ACF7A1B7F1B02E /* Pods-UnderTimesTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -162,6 +163,7 @@
 				49B4165F2468556500B2EA91 /* LaunchScreen.storyboard */,
 				49B416622468556500B2EA91 /* Info.plist */,
 				49B4165C2468556500B2EA91 /* Preview Content */,
+				497B87EA24820D2E00A6A0AA /* Network.swift */,
 			);
 			path = UnderTimes;
 			sourceTree = "<group>";
@@ -436,6 +438,7 @@
 				49B416552468556300B2EA91 /* AppDelegate.swift in Sources */,
 				49B416572468556300B2EA91 /* SceneDelegate.swift in Sources */,
 				49B416592468556300B2EA91 /* ContentView.swift in Sources */,
+				497B87EB24820D2E00A6A0AA /* Network.swift in Sources */,
 				49B416892468559F00B2EA91 /* Article.swift in Sources */,
 				49E13051246FFDA900CCD53F /* CategoryView.swift in Sources */,
 				49EBB85C2469BB7400332D3A /* API.swift in Sources */,

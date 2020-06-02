@@ -8,7 +8,7 @@ target 'UnderTimes' do
   # Pods for UnderTimes
 
 	pod 'Alamofire', '~> 5.2'
-
+	pod 'ObjectMapper', '~> 3.5'
 
   target 'UnderTimesTests' do
     inherit! :search_paths
