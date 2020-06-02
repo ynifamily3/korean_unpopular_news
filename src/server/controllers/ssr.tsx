@@ -5,8 +5,9 @@ import { Helmet } from "react-helmet";
 import path from "path";
 import React from "react";
 import { ServerStyleSheets } from "@material-ui/core/styles";
+import { Request, Response } from "express";
 
-export default function ssr(req, res): void {
+export default function ssr(req: Request, res: Response): void {
   const nodeStats = path.resolve(
     __dirname,
     "../../../public/dist/node/loadable-stats.json"

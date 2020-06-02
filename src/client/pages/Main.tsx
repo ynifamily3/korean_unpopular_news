@@ -30,7 +30,7 @@ export interface KeywordsIE {
   excludeKeywords: string[];
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     justifyContent: "center",
