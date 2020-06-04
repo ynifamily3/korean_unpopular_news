@@ -98,7 +98,7 @@ const Main = (props: MainProps): JSX.Element => {
           {
             newsArticles(
               offset: ${
-                newses[newses.length - 1]?.id ? newses[newses.length - 1].id : 0
+                newses[newses.length - 1].id ? newses[newses.length - 1].id : 0
               },
               start: "2020-05-31T00:00:00.000Z",
               # end: "2020-06-01T00:00:00.000Z",

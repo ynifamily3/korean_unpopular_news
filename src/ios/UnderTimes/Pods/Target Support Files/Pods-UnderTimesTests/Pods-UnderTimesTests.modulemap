@@ -1,0 +1,6 @@
+framework module Pods_UnderTimesTests {
+  umbrella header "Pods-UnderTimesTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
