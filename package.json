@@ -65,7 +65,7 @@
     "@types/react-helmet": "^6.0.0",
     "@types/react-router-dom": "^5.1.5",
     "apollo-boost": "^0.4.9",
-    "apollo-server-express": "^2.13.1",
+    "apollo-server-express": "^2.14.2",
     "axios": "^0.19.2",
     "class-validator": "^0.12.2",
     "cross-fetch": "^3.0.4",
