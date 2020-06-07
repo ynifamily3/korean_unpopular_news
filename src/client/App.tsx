@@ -2,7 +2,8 @@ import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import loadable from "@loadable/component";
 import Top from "./components/Top";
-// import { Button } from "@material-ui/core";
+import ApolloClient from "apollo-boost";
+import { ApolloProvider } from "@apollo/react-hooks";
 
 const Main = loadable(() =>
   import(/* webpackChunkName: "MainPage" */ "./pages/Main")
@@ -10,6 +11,10 @@ const Main = loadable(() =>
 const About = loadable(() =>
   import(/* webpackChunkName: "About" */ "./pages/About")
 );
+
+const client = new ApolloClient({
+  uri: "https://undertimes.alien.moe/graphql",
+});
 
 export const Categories = [
   {
@@ -53,7 +58,11 @@ const App = (): JSX.Element => {
             <Route
               key={x.link}
               path={x.link}
-              render={(): JSX.Element => <Main section={x.section} />}
+              render={(): JSX.Element => (
+                <ApolloProvider client={client}>
+                  <Main section={x.section} />
+                </ApolloProvider>
+              )}
             />
           );
         })}

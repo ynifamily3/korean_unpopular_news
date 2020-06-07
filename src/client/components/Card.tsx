@@ -82,7 +82,6 @@ function Card(props: NewsArticle & KeywordsIE): JSX.Element {
 
   const cardColumnTop: CSSProperties = {
     marginTop: "20px",
-    backgroundColor: "#b4b5bd",
     width: "100%",
     boxSizing: "border-box",
     textOverflow: "ellipsis",
@@ -110,21 +109,25 @@ function Card(props: NewsArticle & KeywordsIE): JSX.Element {
     <div style={cardStyle}>
       <div style={cardColumnTop}>
         {typeof img === "string" ? (
-          <img style={{ margin: "0 auto", maxHeight: "256px" }} src={img} />
-        ) : (
-          <div>&lt;No Image&gt;</div>
-        )}
+          <img
+            style={{
+              margin: "0 auto",
+              height: "auto",
+              maxHeight: "255px",
+              width: "auto",
+            }}
+            src={img}
+          />
+        ) : null}
       </div>
       <div style={cardColumn}>
         <h3>
           <a href={url} target="_blank" rel="noreferrer noopener">
-            {id} - {title}
+            {sections[category] ? sections[category] : "기타"} - {title}
           </a>
         </h3>
-        <h4>{sections[category] ? sections[category] : "(기타)"}</h4>
         <h5>{`${year}/${month}/${date} ${time}`}</h5>
         <div className={classes.root}>
-          <Typography className={classes.keywordsT}>키워드 : </Typography>
           {keywords.map((keyword, i) => {
             if (includeKeywords.includes(keyword.value)) {
               return (

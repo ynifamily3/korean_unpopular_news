@@ -98,7 +98,10 @@ const Top = (): JSX.Element => {
         excludeParam
     );
   };
-  const handleChangeLink = (e: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChangeLink = (
+    e: React.ChangeEvent<unknown>,
+    newValue: number
+  ) => {
     history.push(order[newValue] + location.search);
   };
   return (
@@ -114,9 +117,9 @@ const Top = (): JSX.Element => {
               indicatorColor="primary"
               textColor="primary"
               onChange={handleChangeLink}
-              // variant="scrollable"
+              variant="scrollable"
               // scrollButtons="auto"
-              centered
+              // centered
             >
               {Categories.map((x) => {
                 return <Tab key={"category-" + x.link} label={x.section} />;
