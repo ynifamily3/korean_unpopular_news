@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Helmet } from "react-helmet";
 import Card from "../components/Card";
-import { gql } from "apollo-boost";
+import ApolloClient, { gql } from "apollo-boost";
 import { Button } from "@material-ui/core";
 import { useLocation } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -10,6 +10,10 @@ import queryString from "query-string";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { useQuery } from "@apollo/react-hooks";
+
+const client = new ApolloClient({
+  uri: "https://undertimes.alien.moe/graphql",
+});
 
 interface MainProps {
   section?: string;
@@ -59,7 +63,7 @@ const FETCH_NEWS_ARTICLES = gql`
   }
 `;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
     justifyContent: "center",
@@ -104,19 +108,36 @@ const Main = (props: MainProps): JSX.Element => {
   };
   const handleMoreClick = (): void => {
     setMoreLoaded(false);
-    refetch({
-      include,
-      exclude,
-      offset:
-        newses !== null && newses.length > 0
-          ? +newses[newses.length - 1].id
-          : 0,
-      category:
-        location.pathname.substr(1) === "ALL"
-          ? undefined
-          : location.pathname.substr(1),
-    });
+    // 수동 ajaxfetch하여 append한다.
+    client
+      .query({
+        query: FETCH_NEWS_ARTICLES,
+        variables: {
+          include,
+          exclude,
+          offset:
+            newses && newses.length > 0 ? +newses[newses.length - 1].id : 0,
+          category:
+            location.pathname.substr(1) === "ALL"
+              ? undefined
+              : location.pathname.substr(1),
+        },
+      })
+      .then((result) => {
+        const data: NewsArticle[] = result.data.newsArticles;
+        if (data.length === 0) {
+          setNomoreNewsOpen(true);
+        } else if (newses !== null) setNewses([...newses, ...data]);
+        else setNewses(data);
+        setMoreLoaded(true);
+      })
+      .catch((error) => {
+        alert("추가 데이터 로딩 중 문제발생");
+        console.log(error);
+        setMoreLoaded(true);
+      });
   };
+
   const { loading, error, data, refetch } = useQuery(FETCH_NEWS_ARTICLES, {
     variables: {
       include,
@@ -133,15 +154,7 @@ const Main = (props: MainProps): JSX.Element => {
   useEffect(() => {
     if (loading) return;
     if (!error) {
-      if (newses === null) {
-        console.log("처음 페치");
-        setNewses(data.newsArticles);
-      } else {
-        console.log("추가 로딩 됨.");
-        setMoreLoaded(true);
-        if (data.newsArticles.length === 0) setNomoreNewsOpen(true);
-        setNewses([...newses, ...data.newsArticles]); // 페치된 뉴스를 어펜드
-      }
+      setNewses(data.newsArticles);
     } else {
       alert("오류 발생...");
     }
@@ -169,10 +182,10 @@ const Main = (props: MainProps): JSX.Element => {
       {loading && <CircularProgress className={classes.loading} />}
       {data &&
         newses &&
-        newses.map((news) => {
+        newses.map((news, i) => {
           return (
             <Card
-              key={"news-" + news.id}
+              key={"news-" + news.id + (i + "")}
               {...news}
               includeKeywords={include}
               excludeKeywords={exclude}
