@@ -5,3 +5,5 @@ prod.env
 docker-compose.yml
 lib
 data
+.DS_Store
+.java-version

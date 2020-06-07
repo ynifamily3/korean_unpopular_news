@@ -15,7 +15,10 @@ function Chips(props: ChipsProps): JSX.Element {
     <>
       {keywords.map((x: string, i: number) => (
         <Chip
-          //   variant="outlined"
+          style={{
+            marginRight: "4px",
+          }}
+          variant="outlined"
           size="small"
           key={x + i}
           onDelete={handleDelete(x)}

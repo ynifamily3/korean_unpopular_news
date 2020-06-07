@@ -4,13 +4,17 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, Theme } from "@material-ui/core/styles";
-import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+// import Breadcrumbs from "@material-ui/core/Breadcrumbs";
 import { Categories } from "../App";
 import CustomizedHook from "./TagSearchForm";
 import { ApolloProvider } from "@apollo/react-hooks";
 import queryString from "query-string";
-import ApolloClient, { gql } from "apollo-boost";
-import Chips, { ChipsProps } from "./Chips";
+import ApolloClient from "apollo-boost";
+import Chips from "./Chips";
+import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Grid from "@material-ui/core/Grid";
 
 const client = new ApolloClient({
   uri: "https://undertimes.alien.moe/graphql",
@@ -19,6 +23,7 @@ const client = new ApolloClient({
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     flexGrow: 1,
+    width: "100%",
   },
   toolbar: {
     flexDirection: "column",
@@ -30,18 +35,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexGrow: 1,
     alignSelf: "center",
   },
-  category: {
-    color: theme.palette.background.paper,
-  },
-  linkStyle: {
-    textDecoration: "none",
-    color: theme.palette.background.paper,
-  },
-  sel: {
-    color: theme.palette.secondary.light,
-  },
-  fullWidth: {
-    width: "100%",
+  paper: {
+    height: 72,
+    display: "flex",
+    padding: "30px 30px",
+    flexDirection: "column",
+    justifyContent: "center",
   },
 }));
 
@@ -55,6 +54,14 @@ const Top = (): JSX.Element => {
   sections["SCIENCE"] = "IT/과학";
   sections["LIFE"] = "생활/문화";
   sections["WORLD"] = "세계";
+  const order: string[] = [];
+  order.push("/ALL");
+  order.push("/POLITICS");
+  order.push("/ECONOMY");
+  order.push("/SOCIAL");
+  order.push("/SCIENCE");
+  order.push("/LIFE");
+  order.push("/WORLD");
 
   const location = useLocation();
   const history = useHistory();
@@ -91,7 +98,9 @@ const Top = (): JSX.Element => {
         excludeParam
     );
   };
-
+  const handleChangeLink = (e: React.ChangeEvent<{}>, newValue: number) => {
+    history.push(order[newValue] + location.search);
+  };
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -99,34 +108,55 @@ const Top = (): JSX.Element => {
           <Typography className={classes.title} variant="h5" noWrap>
             UnderTimes - {sections[location.pathname.substr(1)]}
           </Typography>
-          <Breadcrumbs aria-label="breadcrumb" className={classes.category}>
-            {Categories.map((x) => {
-              return (
-                <Link
-                  to={x.link + location.search}
-                  key={"category-" + x.link}
-                  className={classes.linkStyle}
-                >
-                  {location.pathname === x.link ? (
-                    <Typography>{x.section}</Typography>
-                  ) : (
-                    <Typography className={classes.sel}>{x.section}</Typography>
-                  )}
-                </Link>
-              );
-            })}
-          </Breadcrumbs>
-          <ApolloProvider client={client}>
-            <CustomizedHook includes={includes} excludes={excludes} />
-          </ApolloProvider>
-          <div>
-            포함된 키워드 :
-            <Chips keywords={includes} triggerEvent={jumpTo(0)} />
-          </div>
-          <div>
-            제외된 키워드 :
-            <Chips keywords={excludes} triggerEvent={jumpTo(1)} />
-          </div>
+          <Paper className={classes.root}>
+            <Tabs
+              value={order.indexOf(location.pathname)}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={handleChangeLink}
+              // variant="scrollable"
+              // scrollButtons="auto"
+              centered
+            >
+              {Categories.map((x) => {
+                return <Tab key={"category-" + x.link} label={x.section} />;
+              })}
+            </Tabs>
+          </Paper>
+          <Grid
+            container
+            spacing={3}
+            direction="row"
+            justify="center"
+            alignItems="center"
+            style={{ marginTop: 15 }}
+          >
+            <Grid item xs={12} md={4}>
+              <Paper elevation={3} className={classes.paper}>
+                <div style={{ flexGrow: 1 }}>
+                  <ApolloProvider client={client}>
+                    <CustomizedHook includes={includes} excludes={excludes} />
+                  </ApolloProvider>
+                </div>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography>포함 키워드</Typography>
+                <div>
+                  <Chips keywords={includes} triggerEvent={jumpTo(0)} />
+                </div>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography>제외 키워드</Typography>
+                <div>
+                  <Chips keywords={excludes} triggerEvent={jumpTo(1)} />
+                </div>
+              </Paper>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
     </div>

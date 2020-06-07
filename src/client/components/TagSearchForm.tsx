@@ -94,12 +94,11 @@ export default function TagSearchForm(props: TagSearchFormProps): JSX.Element {
   };
 
   useEffect(() => {
-    console.log("로케이션 변동", location);
     // fetch
+    setInputValue("");
   }, [location]);
 
   useEffect(() => {
-    console.log(loading, "로딩변경");
     if (error) {
       console.log(error);
       setOptions([]);
@@ -125,8 +124,6 @@ export default function TagSearchForm(props: TagSearchFormProps): JSX.Element {
 
   return (
     <Autocomplete
-      id="asynchronous-demo"
-      style={{ width: 300 }}
       open={open}
       onOpen={() => {
         setOpen(true);
@@ -144,9 +141,9 @@ export default function TagSearchForm(props: TagSearchFormProps): JSX.Element {
       onInputChange={handleChangeInputValue}
       renderInput={(params) => (
         <TextField
+          variant="outlined"
           {...params}
           label="키워드 검색"
-          // variant="outlined"
           InputProps={{
             ...params.InputProps,
             endAdornment: (
