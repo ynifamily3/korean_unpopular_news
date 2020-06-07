@@ -97,7 +97,7 @@ export class NewsResolver {
       });
 
     qb.innerJoinAndSelect("news.keywords", "keywords")
-      .orderBy("news.createdAt", desc ? "DESC" : "ASC")
+      .orderBy("news.id", desc ? "DESC" : "ASC")
       .take(limit);
 
     return qb.getMany();
