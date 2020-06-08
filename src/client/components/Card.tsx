@@ -114,7 +114,7 @@ function Card(props: NewsArticle & KeywordsIE): JSX.Element {
               margin: "0 auto",
               height: "auto",
               maxHeight: "255px",
-              width: "auto",
+              maxWidth: "100%",
             }}
             src={img}
           />
