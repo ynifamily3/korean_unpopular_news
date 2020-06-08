@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
+import Link from "@material-ui/core/Link";
 import { NewsArticle, KeywordsIE } from "../pages/Main";
 import { useLocation, useHistory } from "react-router-dom";
 
@@ -122,9 +122,14 @@ function Card(props: NewsArticle & KeywordsIE): JSX.Element {
       </div>
       <div style={cardColumn}>
         <h3>
-          <a href={url} target="_blank" rel="noreferrer noopener">
+          <Link
+            href={url}
+            color="inherit"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
             {sections[category] ? sections[category] : "기타"} - {title}
-          </a>
+          </Link>
         </h3>
         <h5>{`${year}/${month}/${date} ${time}`}</h5>
         <div className={classes.root}>

@@ -40,14 +40,16 @@ const FETCH_NEWS_ARTICLES = gql`
     $exclude: [String!]
     $category: Category
     $offset: ID = 0
+    $start: DateTime! = "2020-06-01T12:51:44.012Z"
   ) {
     newsArticles(
       offset: $offset
-      start: "2020-06-01T12:51:44.012Z"
+      start: $start
       limit: 15
       include_keywords: $include
       exclude_keywords: $exclude
       category: $category
+      desc: false
     ) {
       id
       title
@@ -88,6 +90,14 @@ const Main = (props: MainProps): JSX.Element => {
   const [moreLoaded, setMoreLoaded] = useState<boolean>(true);
   const [newses, setNewses] = useState<NewsArticle[] | null>(null);
   const [nomoreNewsOpen, setNomoreNewsOpen] = useState<boolean>(false);
+  const [yesterday, setYesterday] = useState(
+    function (this: Date) {
+      this.setDate(this.getDate() - 1);
+      return this;
+    }
+      .call(new Date())
+      .toISOString()
+  );
   const { section } = props;
   const classes = useStyles();
   const location = useLocation();
@@ -115,6 +125,7 @@ const Main = (props: MainProps): JSX.Element => {
         variables: {
           include,
           exclude,
+          start: yesterday,
           offset:
             newses && newses.length > 0 ? +newses[newses.length - 1].id : 0,
           category:
@@ -142,6 +153,7 @@ const Main = (props: MainProps): JSX.Element => {
     variables: {
       include,
       exclude,
+      start: yesterday,
       offset: 0,
       category:
         location.pathname.substr(1) === "ALL"
@@ -166,6 +178,7 @@ const Main = (props: MainProps): JSX.Element => {
       refetch({
         include,
         exclude,
+        start: yesterday,
         offset: 0,
         category:
           location.pathname.substr(1) === "ALL"
@@ -182,10 +195,10 @@ const Main = (props: MainProps): JSX.Element => {
       {loading && <CircularProgress className={classes.loading} />}
       {data &&
         newses &&
-        newses.map((news, i) => {
+        newses.map((news) => {
           return (
             <Card
-              key={"news-" + news.id + (i + "")}
+              key={"news-" + news.id}
               {...news}
               includeKeywords={include}
               excludeKeywords={exclude}

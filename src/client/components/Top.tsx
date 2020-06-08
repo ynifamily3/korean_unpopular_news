@@ -113,7 +113,11 @@ const Top = (): JSX.Element => {
           </Typography>
           <Paper className={classes.root}>
             <Tabs
-              value={order.indexOf(location.pathname)}
+              value={
+                order.indexOf(location.pathname) < 0
+                  ? 0
+                  : order.indexOf(location.pathname)
+              }
               indicatorColor="primary"
               textColor="primary"
               onChange={handleChangeLink}
