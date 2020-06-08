@@ -1,6 +1,6 @@
 import { Keyword } from "../../database/entity/Keyword";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Repository, Between } from "typeorm";
+import { Repository, Between, Brackets } from "typeorm";
 import {
   Resolver,
   Query,
@@ -12,6 +12,7 @@ import {
   registerEnumType,
 } from "type-graphql";
 import { Min, Max } from "class-validator";
+import { DateTime } from "luxon";
 
 enum KeywordOrderBy {
   WEIGHT = "weight",
@@ -75,11 +76,19 @@ export class KeywordResolver {
       })
       .groupBy("keyword.value");
 
-    value && qb.andWhere("keyword.value LIKE :value", { value: `%${value}%` });
-    value && qb.andWhere("keyword.value LIKE :value", { value: `${value}%` });
-    value && qb.andWhere("keyword.value LIKE :value", { value: `%${value}` });
+    qb.andWhere(
+      new Brackets((qb) => {
+        if (value) {
+          qb.where("keyword.value LIKE :mvalue", { mvalue: `%${value}%` })
+            .orWhere("keyword.value LIKE :rvalue", { rvalue: `${value}%` })
+            .orWhere("keyword.value LIKE :lvalue", { lvalue: `%${value}` });
+        }
+      })
+    );
 
-    start && qb.andWhere("keyword.createdAt >= :start", { start });
+    qb.andWhere("keyword.createdAt >= :start", {
+      start: start || new DateTime().minus({ day: 1 }).toJSDate(),
+    });
     end && qb.andWhere("keyword.createdAt <= :end", { end });
 
     switch (order) {
