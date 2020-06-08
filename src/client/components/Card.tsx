@@ -16,7 +16,7 @@ function Card(props: NewsArticle & KeywordsIE): JSX.Element {
   sections["SCIENCE"] = "IT/과학";
   sections["LIFE"] = "생활/문화";
   sections["WORLD"] = "세계";
-  const { title, url, img, createdAt, keywords, category, id } = props;
+  const { title, url, img, createdAt, keywords, category } = props;
   const { includeKeywords, excludeKeywords } = props;
   const dateFormat = new Date(createdAt);
   const year = dateFormat.getFullYear();
