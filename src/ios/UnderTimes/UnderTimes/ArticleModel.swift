@@ -9,7 +9,31 @@
 import Foundation
 import ObjectMapper
 
-class ArticleVO : Mappable{
+
+class DataVO:Mappable{
+    var data : NewsArticleVO?
+    required init?(map: Map) {
+        
+    }
+    func mapping(map: Map) {
+        data <- map["data"]
+    }
+}
+
+class NewsArticleVO: Mappable{
+    
+    var newsArticles : [ArticleVO]?
+    required init?(map: Map) {
+        
+    }
+    func mapping(map: Map) {
+        newsArticles <- map["newsArticles"]
+    }
+}
+
+
+class ArticleVO : Mappable,Identifiable{
+    var id : String?
     var limit:Int?
     var title:String?
     var url:String?
@@ -21,6 +45,7 @@ class ArticleVO : Mappable{
         
     }
     func mapping(map: Map) {
+        id <- map["id"]
         limit <- map["limit"]
         title <- map["title"]
         url <- map["url"]

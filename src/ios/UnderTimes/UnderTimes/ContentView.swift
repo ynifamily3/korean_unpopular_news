@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
 
-    @State var articles = TestData.articles()
+    @State var articles = Array<ArticleVO>()
     @State var category = ["목록1","목록2","목록3","목록4"]
 
     var body: some View {
@@ -25,21 +25,12 @@ struct ContentView: View {
                             CategoryView()
                             CategoryView()
                             CategoryView()
-
-                            CategoryView()
-
                         }
                     }
                     ForEach(articles) { article in
                         ArticleView(article: article)
                             .padding(.bottom, 16)
-
-                    }.onAppear{
-                        ArticleAPI.callArticle { (result) in
-                            guard result != nil else {return}
-                            if let data = result?.data{
-                            }
-                        }
+                        
 
                     }
                 }
@@ -50,6 +41,13 @@ struct ContentView: View {
             .padding(.trailing, -20) 
             .navigationBarTitle(Text("Articles"))
 
+        }.onAppear{
+            ArticleAPI.callArticle { responseArticles in
+                print(responseArticles)
+                guard responseArticles != nil else { return }
+                self.articles = responseArticles!
+                
+            }
         }
     .background(Color(UIColor(red: 249/255, green: 247/255, blue: 240/255, alpha: 1)))
     }

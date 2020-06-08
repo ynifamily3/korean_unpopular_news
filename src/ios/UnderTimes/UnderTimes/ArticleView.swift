@@ -10,10 +10,10 @@ import Foundation
 import SwiftUI
 
 struct ArticleTextView:View{
-    let article:Article
+    let article:ArticleVO
     var body: some View{
         VStack(alignment: .leading, spacing: 0) {
-            Text(article.content ?? "").lineLimit(2).font(.body)
+            Text(article.title ?? "").lineLimit(2).font(.body)
                 .padding(.leading, 16)
                 .padding(.trailing, 16)
                 .padding(.bottom, 8)
@@ -24,14 +24,20 @@ struct ArticleTextView:View{
 }
 
 struct ArticleView: View {
-    let article :Article
+    let article :ArticleVO
     var body: some View{
         VStack(alignment: .leading, spacing: 10) {
-            Image(article.image ?? "")
+            Image( "image4")
             .resizable()  // creates resizable image
             .overlay(ArticleTextView(article: article),alignment: .bottom)
             .aspectRatio(3/2, contentMode: .fit)
         }
+        .onTapGesture {
+            print("클릭됨 - \(self.article.title) ")
+            ContentView()
+        }
+    
+    
     }
 
 }

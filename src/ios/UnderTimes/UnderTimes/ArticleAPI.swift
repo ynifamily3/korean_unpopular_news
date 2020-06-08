@@ -10,25 +10,39 @@ import Foundation
 import Alamofire
 import ObjectMapper
 import Apollo
-
-class ArticleListGP : GraphQLQuery{
-    typealias Data = GraphQLSelection
+import AlamofireObjectMapper
+class VariableVO{
     
 }
 
 class ArticleAPI{
     
-    static func callArticle(_ completion:@escaping (GraphQLResult<ArticleListGP.Data>?)->Void){
-        Network.shared.apollo.fetch(query: ArticleListGP()) { result in
-          switch result {
-          case .success(let graphQLResult):
-            print("Success! Result: \(graphQLResult)")
-            completion(graphQLResult)
-          case .failure(let error):
-            print("Failure! Error: \(error)")
-            completion(nil)
-          }
+    static func callArticle(_ completion:@escaping ([ArticleVO]?)->Void){
+        let param :Parameters = [
+            "query":"{newsArticles(start: \"2020-05-31\", include_keywords:[\"주택\"], exclude_keywords: [\"5호선\",\"국토\", \"주거\"]) { \n id \n title \n url \n img \n keywords { \n value \n } \n }}"
+        ]
+        Alamofire.request("https://undertimes.alien.moe/graphql", method: .post, parameters: param, encoding: JSONEncoding.default, headers: ["Content-Type":"application/json"]).responseObject { (response:DataResponse<DataVO>) in
+            switch response.result{
+            case .success(let value):
+                if let newArticle = value.data{
+                    if let articles = newArticle.newsArticles{
+                        completion(articles)
+                    }else{completion(nil)}
+                }else{completion(nil)}
+            case .failure(let error):
+                completion(nil)
+                print(error)
+            }
         }
-
+            
+            
+            /*
+            .responseString { (response) in
+            print(response)
+            print(response.result)
+            print(response.data)
+            print(response.description)
+        }*/
+        
     }
 }
