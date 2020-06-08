@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		392AC46D9EDEDE6B67901B1F /* Pods_UnderTimes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5221C5DAB544A713E67DF7D0 /* Pods_UnderTimes.framework */; };
 		497B87EB24820D2E00A6A0AA /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B87EA24820D2E00A6A0AA /* Network.swift */; };
+		498395D4248E07A7007541D2 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498395D3248E07A7007541D2 /* WebView.swift */; };
 		49B2D7B02485E77300A0915B /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2D7AF2485E77300A0915B /* ArticleModel.swift */; };
 		49B2D7B22485E95C00A0915B /* ArticleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2D7B12485E95C00A0915B /* ArticleAPI.swift */; };
 		49B2D7B42485F18600A0915B /* ArticleList.graphql in Resources */ = {isa = PBXBuildFile; fileRef = 49B2D7B32485F18600A0915B /* ArticleList.graphql */; };
@@ -50,6 +51,7 @@
 /* Begin PBXFileReference section */
 		2F82593718801EC969B08961 /* Pods_UnderTimes_UnderTimesUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnderTimes_UnderTimesUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		497B87EA24820D2E00A6A0AA /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		498395D3248E07A7007541D2 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		49B2D7AF2485E77300A0915B /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
 		49B2D7B12485E95C00A0915B /* ArticleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleAPI.swift; sourceTree = "<group>"; };
 		49B2D7B32485F18600A0915B /* ArticleList.graphql */ = {isa = PBXFileReference; lastKnownFileType = text; path = ArticleList.graphql; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				49E13050246FFDA900CCD53F /* CategoryView.swift */,
 				49B416852468559F00B2EA91 /* Article.swift */,
 				49B416862468559F00B2EA91 /* ArticleView.swift */,
+				498395D3248E07A7007541D2 /* WebView.swift */,
 				49B416842468559F00B2EA91 /* DummyData.swift */,
 				49EBB85B2469BB7400332D3A /* API.swift */,
 				49B4165A2468556500B2EA91 /* Assets.xcassets */,
@@ -456,6 +459,7 @@
 				49B2D7B02485E77300A0915B /* ArticleModel.swift in Sources */,
 				49B2D7B22485E95C00A0915B /* ArticleAPI.swift in Sources */,
 				49B416892468559F00B2EA91 /* Article.swift in Sources */,
+				498395D4248E07A7007541D2 /* WebView.swift in Sources */,
 				49E13051246FFDA900CCD53F /* CategoryView.swift in Sources */,
 				49EBB85C2469BB7400332D3A /* API.swift in Sources */,
 			);
