@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Helmet } from "react-helmet";
 import Card from "../components/Card";
-import "cross-fetch/polyfill";
 import ApolloClient, { gql } from "apollo-boost";
 import { Button } from "@material-ui/core";
 import { useLocation } from "react-router-dom";
@@ -10,6 +9,11 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import queryString from "query-string";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+import { useQuery } from "@apollo/react-hooks";
+
+const client = new ApolloClient({
+  uri: "https://undertimes.alien.moe/graphql",
+});
 
 interface MainProps {
   section?: string;
@@ -20,7 +24,7 @@ export interface NewsArticle {
   title: string;
   url: string;
   img: string | null | undefined;
-  createdAt: string; // ISO Date
+  createdAt: string;
   keywords: { value: string; weight: number }[];
   category: string;
 }
@@ -29,6 +33,37 @@ export interface KeywordsIE {
   includeKeywords: string[];
   excludeKeywords: string[];
 }
+
+const FETCH_NEWS_ARTICLES = gql`
+  query NewsArticles(
+    $include: [String!]
+    $exclude: [String!]
+    $category: Category
+    $offset: ID = 0
+    $start: DateTime! = "2020-06-01T12:51:44.012Z"
+  ) {
+    newsArticles(
+      offset: $offset
+      start: $start
+      limit: 15
+      include_keywords: $include
+      exclude_keywords: $exclude
+      category: $category
+      desc: false
+    ) {
+      id
+      title
+      url
+      img
+      createdAt
+      keywords {
+        value
+        weight
+      }
+      category
+    }
+  }
+`;
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -47,33 +82,25 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function makeArrStr(arr: string[]): string {
-  if (arr.length === 0) return "[]";
-  let string = "[";
-  arr.forEach((x, i) => {
-    string += '"' + x + '"';
-    if (i + 1 !== arr.length) string += ", ";
-  });
-  string += "]";
-  return string;
-}
-
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const Main = (props: MainProps): JSX.Element => {
-  const [loaded, setLoaded] = useState<boolean>(false);
   const [moreLoaded, setMoreLoaded] = useState<boolean>(true);
-  const [newses, setNewses] = useState<NewsArticle[]>([]);
+  const [newses, setNewses] = useState<NewsArticle[] | null>(null);
   const [nomoreNewsOpen, setNomoreNewsOpen] = useState<boolean>(false);
+  const [yesterday, setYesterday] = useState(
+    function (this: Date) {
+      this.setDate(this.getDate() - 1);
+      return this;
+    }
+      .call(new Date())
+      .toISOString()
+  );
   const { section } = props;
   const classes = useStyles();
   const location = useLocation();
-  const moreLoadingRef = useRef(null);
-  const client = new ApolloClient({
-    uri: "https://undertimes.alien.moe/graphql",
-  });
   const query = queryString.parse(location.search);
   const include: string[] =
     typeof query.include === "string" && query.include.length > 0
@@ -87,112 +114,97 @@ const Main = (props: MainProps): JSX.Element => {
     if (reason === "clickaway") {
       return;
     }
-
     setNomoreNewsOpen(false);
   };
   const handleMoreClick = (): void => {
     setMoreLoaded(false);
+    // 수동 ajaxfetch하여 append한다.
     client
       .query({
-        query: gql`
-          {
-            newsArticles(
-              offset: ${
-                newses[newses.length - 1].id ? newses[newses.length - 1].id : 0
-              },
-              start: "2020-05-31T00:00:00.000Z",
-              # end: "2020-06-01T00:00:00.000Z",
-              limit: 3,
-              include_keywords: ${makeArrStr(include)},
-              exclude_keywords: ${makeArrStr(exclude)},
-              ${
-                location.pathname !== "/ALL"
-                  ? `category: ${location.pathname.substr(1)}`
-                  : ""
-              }
-            ) {
-              id
-              title
-              url
-              img
-              createdAt
-              keywords {
-                value
-                weight
-              }
-              category
-            }
-          }
-        `,
+        query: FETCH_NEWS_ARTICLES,
+        variables: {
+          include,
+          exclude,
+          start: yesterday,
+          offset:
+            newses && newses.length > 0 ? +newses[newses.length - 1].id : 0,
+          category:
+            location.pathname.substr(1) === "ALL"
+              ? undefined
+              : location.pathname.substr(1),
+        },
       })
       .then((result) => {
-        setMoreLoaded(true);
-        if (result.data.newsArticles.length === 0) {
+        const data: NewsArticle[] = result.data.newsArticles;
+        if (data.length === 0) {
           setNomoreNewsOpen(true);
-        }
-        setNewses([...newses, ...result.data.newsArticles]); // 추가된 뉴스 어펜드
+        } else if (newses !== null) setNewses([...newses, ...data]);
+        else setNewses(data);
+        setMoreLoaded(true);
+      })
+      .catch((error) => {
+        alert("추가 데이터 로딩 중 문제발생");
+        console.log(error);
+        setMoreLoaded(true);
       });
   };
+
+  const { loading, error, data, refetch } = useQuery(FETCH_NEWS_ARTICLES, {
+    variables: {
+      include,
+      exclude,
+      start: yesterday,
+      offset: 0,
+      category:
+        location.pathname.substr(1) === "ALL"
+          ? undefined
+          : location.pathname.substr(1),
+    },
+  });
+
+  // 로딩 스테이트가 바뀔 때 렌더링 시킴.
   useEffect(() => {
-    setLoaded(false);
-    client
-      .query({
-        query: gql`
-          {
-            newsArticles(
-              offset: 0,
-              start: "2020-05-31T00:00:00.000Z",
-              # end: "2020-06-01T00:00:00.000Z",
-              limit: 3,
-              include_keywords: ${makeArrStr(include)},
-              exclude_keywords: ${makeArrStr(exclude)},
-              ${
-                location.pathname !== "/ALL"
-                  ? `category: ${location.pathname.substr(1)}`
-                  : ""
-              }
-            ) {
-              id
-              title
-              url
-              img
-              createdAt
-              keywords {
-                value
-                weight
-              }
-              category
-            }
-          }
-        `,
-      })
-      .then((result) => {
-        console.log(result.data);
-        setLoaded(true);
-        setNewses(result.data.newsArticles);
+    if (loading) return;
+    if (!error) {
+      setNewses(data.newsArticles);
+    } else {
+      alert("오류 발생...");
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    // // 위치가 바뀔 때 트리거
+    if (error || data) {
+      refetch({
+        include,
+        exclude,
+        start: yesterday,
+        offset: 0,
+        category:
+          location.pathname.substr(1) === "ALL"
+            ? undefined
+            : location.pathname.substr(1),
       });
+    }
   }, [location]);
   return (
     <div className={classes.root}>
       <Helmet>
         <title>UnderTimes {section}</title>
       </Helmet>
-      {!loaded && <CircularProgress className={classes.loading} />}
-      {loaded &&
-        newses
-          // .sort((a, b) => {
-          //   return Number(b.id) - Number(a.id);
-          // })
-          .map((news) => {
-            return (
-              <Card
-                key={"news-" + news.id}
-                {...news}
-                includeKeywords={include}
-                excludeKeywords={exclude}
-              />
-            );
-          })}
+      {loading && <CircularProgress className={classes.loading} />}
+      {data &&
+        newses &&
+        newses.map((news) => {
+          return (
+            <Card
+              key={"news-" + news.id}
+              {...news}
+              includeKeywords={include}
+              excludeKeywords={exclude}
+            />
+          );
+        })}
 
       <Button
         variant="outlined"
@@ -203,9 +215,7 @@ const Main = (props: MainProps): JSX.Element => {
       >
         더 보기 ...
       </Button>
-      {!moreLoaded && (
-        <CircularProgress className={classes.loading} ref={moreLoadingRef} />
-      )}
+      {!moreLoaded && <CircularProgress className={classes.loading} />}
       <Snackbar
         open={nomoreNewsOpen}
         autoHideDuration={3000}
