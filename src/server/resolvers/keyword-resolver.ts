@@ -76,18 +76,18 @@ export class KeywordResolver {
       })
       .groupBy("keyword.value");
 
-    qb.andWhere(
-      new Brackets((qb) => {
-        if (value) {
+    if (value) {
+      qb.andWhere(
+        new Brackets((qb) => {
           qb.where("keyword.value LIKE :mvalue", { mvalue: `%${value}%` })
             .orWhere("keyword.value LIKE :rvalue", { rvalue: `${value}%` })
             .orWhere("keyword.value LIKE :lvalue", { lvalue: `%${value}` });
-        }
-      })
-    );
+        })
+      );
+    }
 
     qb.andWhere("keyword.createdAt >= :start", {
-      start: start || new DateTime().minus({ day: 1 }).toJSDate(),
+      start: start || DateTime.local().minus({ day: 1 }).toJSDate(),
     });
     end && qb.andWhere("keyword.createdAt <= :end", { end });
 
