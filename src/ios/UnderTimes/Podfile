@@ -11,6 +11,8 @@ target 'UnderTimes' do
 	pod 'ObjectMapper', '~> 3.5'
 	pod 'AlamofireObjectMapper'
 	pod 'Apollo'
+	pod 'SDWebImage'
+	pod 'SDWebImageSwiftUI'
   target 'UnderTimesTests' do
     inherit! :search_paths
     # Pods for testing
