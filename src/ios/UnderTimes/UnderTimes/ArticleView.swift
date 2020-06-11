@@ -24,6 +24,9 @@ struct ArticleTextView:View{
     }
 }
 
+
+
+
 struct ArticleView: View {
     @State var showingSheet = false
     let article :ArticleVO

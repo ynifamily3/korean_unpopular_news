@@ -7,12 +7,15 @@
 //
 
 import SwiftUI
-
+import UIKit
 struct ContentView: View {
 
     @State var articles = Array<ArticleVO>()
     @State var category = ["목록1","목록2","목록3","목록4"]
 
+    init(){
+        UITableView.appearance().separatorColor = .clear
+    }
     var body: some View {
         
         NavigationView{
@@ -20,11 +23,13 @@ struct ContentView: View {
                 List{
                     ScrollView(.horizontal, showsIndicators: false){
                         HStack{
-                            CategoryView()
-                            CategoryView()
-                            CategoryView()
-                            CategoryView()
-                            CategoryView()
+                            CategoryView(title: "홈", imageStr: "image5")
+                            CategoryView(title: "정치", imageStr: "image5")
+                            CategoryView(title: "경제", imageStr: "image5")
+                            CategoryView(title: "사회", imageStr: "image5")
+                            CategoryView(title: "IT/과학", imageStr: "image5")
+                            CategoryView(title: "생활/문화", imageStr: "image5")
+                            CategoryView(title: "세계", imageStr: "image5")
                         }
                     }
                     ForEach(articles) { article in
