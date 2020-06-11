@@ -13,34 +13,36 @@ import SDWebImageSwiftUI
 struct ArticleTextView:View{
     let article:ArticleVO
     var body: some View{
-        VStack(alignment: .leading, spacing: 0) {
-            Text(article.title ?? "").lineLimit(2).font(.body)
-                .padding(.leading, 16)
-                .padding(.trailing, 16)
-                .padding(.bottom, 8)
-                .padding(.top, 8)
-                .background(Color.black.opacity(0.3))
-        }
+        VStack(alignment: .center, spacing: 0) {
+            
+            Rectangle()
+//            .fill()
+//            Text(article.title ?? "").lineLimit(2).font(.body)
+//            .background(ColorList.mainColor)
+//            .foregroundColor(.white)
+        }.background(Color.black)
+        .padding(0)
+        
     }
 }
 
 
-
-
 struct ArticleView: View {
     @State var showingSheet = false
+    @State var frame:CGSize = .zero
+    
     let article :ArticleVO
     var body: some View{
         VStack(alignment: .leading, spacing: 10) {
             WebImage(url: URL(string: article.img ?? ""))
             .resizable()  // creates resizable image
-            .overlay(ArticleTextView(article: article),alignment: .bottom)
-            .aspectRatio(3/2, contentMode: .fit)
-            /*
-            Image( "image4")
-            .resizable()  // creates resizable image
-            .overlay(ArticleTextView(article: article),alignment: .bottom)
-            .aspectRatio(3/2, contentMode: .fit)*/
+            .aspectRatio(contentMode: .fit)
+            
+
+            Text(article.title ?? "").lineLimit(2).font(.body)
+                .background(Color.white)
+            .foregroundColor(.black)
+                .frame(minWidth: 0, maxWidth: .infinity, idealHeight: nil, maxHeight: nil, alignment: .bottom)
             
         }
         .onTapGesture {
@@ -48,9 +50,15 @@ struct ArticleView: View {
             if let url = URL(string: self.article.url ?? ""){
                 UIApplication.shared.open(url)
             }
-            
-            
         }
+        .background(Color.white)
+        
+        .border(Color.gray, width: 1)
+        .cornerRadius(10)
+         .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray, lineWidth: 1)
+            )
     }
 
 }
@@ -104,6 +112,8 @@ struct NewsView:View{
                 .frame(width: 32, height: 32)
             }.disabled(!webViewStore.webView.canGoForward)
           })
+        
+    
       }.onAppear {
         self.webViewStore.webView.load(URLRequest(url: URL(string: "https://apple.com")!))
       }

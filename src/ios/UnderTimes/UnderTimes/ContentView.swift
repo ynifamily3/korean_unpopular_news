@@ -34,7 +34,11 @@ struct ContentView: View {
                     }
                     ForEach(articles) { article in
                         ArticleView(article: article)
-                            .padding(.bottom, 16)
+//                            .padding(.bottom, 16)
+                        .padding(16)
+                        .padding(.top, 8)
+                        .padding(.bottom, 8)
+                        
                         
 
                     }
@@ -47,7 +51,7 @@ struct ContentView: View {
             .navigationBarTitle(Text("Articles"))
 
         }.onAppear{
-            ArticleAPI.callArticle { responseArticles in
+            ArticleAPI.callArticle(lastId: nil, limit: 10, category: nil,includKeywords: nil, excludeKeywords: nil) { responseArticles in
                 print(responseArticles)
                 guard responseArticles != nil else { return }
                 self.articles = responseArticles!

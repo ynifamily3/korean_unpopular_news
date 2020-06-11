@@ -14,12 +14,51 @@ import AlamofireObjectMapper
 class VariableVO{
     
 }
+enum CategoryVO:String {
+    case POLITICS
+    case ECONOMY
+    case SOCIAL
+    case LIFE
+    case WORLD
+    case SCIENCE
+}
 
 class ArticleAPI{
     
-    static func callArticle(_ completion:@escaping ([ArticleVO]?)->Void){
+    static func callArticle( lastId:Int?,limit:Int?, category:String?, includKeywords:[String]?,  excludeKeywords:[String]?, _ completion:@escaping ([ArticleVO]?)->Void){
+        var formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "ko_KR")
+        var current_date = formatter.string(from: Date())
+        
+        var queryString = "{newsArticles(start: \"\(current_date)\""
+        if category != nil {
+            queryString = queryString + ", category : \(category!)"
+        }
+        if limit != nil {
+            queryString = queryString + ", limit : \(limit!)"
+        }
+        if lastId != nil {
+            queryString = queryString + ", offset : \(lastId!)"
+        }
+        if includKeywords != nil {
+            queryString = queryString + ", include_keywords : ["
+            for row in includKeywords!{
+                queryString = queryString + "\"\(row)\""
+            }
+            queryString = queryString + "]"
+        }
+        if excludeKeywords != nil {
+            queryString = queryString + ", exclude_keywords : ["
+            for row in excludeKeywords!{
+                queryString = queryString + "\"\(row)\""
+            }
+            queryString = queryString + "]"
+        }
+        
+        queryString = queryString + ") { \n id \n title \n url \n img \n keywords { \n value \n } \n }}"
         let param :Parameters = [
-            "query":"{newsArticles(start: \"2020-05-31\", include_keywords:[\"주택\"], exclude_keywords: [\"5호선\",\"국토\", \"주거\"]) { \n id \n title \n url \n img \n keywords { \n value \n } \n }}"
+            "query":queryString
         ]
         Alamofire.request("https://undertimes.alien.moe/graphql", method: .post, parameters: param, encoding: JSONEncoding.default, headers: ["Content-Type":"application/json"]).responseObject { (response:DataResponse<DataVO>) in
             switch response.result{
