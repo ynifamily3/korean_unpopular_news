@@ -8,9 +8,15 @@
 
 import SwiftUI
 import UIKit
+
+class ArticleObserver : ObservableObject{
+    @Published var articles = Array<ArticleVO>()
+}
+
 struct ContentView: View {
 
-    @State var articles = Array<ArticleVO>()
+    @EnvironmentObject var articles : ArticleObserver
+//    @State var articles = Array<ArticleVO>()
     @State var category = ["목록1","목록2","목록3","목록4"]
 
     init(){
@@ -23,24 +29,21 @@ struct ContentView: View {
                 List{
                     ScrollView(.horizontal, showsIndicators: false){
                         HStack{
-                            CategoryView(title: "홈", imageStr: "image5")
-                            CategoryView(title: "정치", imageStr: "image5")
-                            CategoryView(title: "경제", imageStr: "image5")
-                            CategoryView(title: "사회", imageStr: "image5")
-                            CategoryView(title: "IT/과학", imageStr: "image5")
-                            CategoryView(title: "생활/문화", imageStr: "image5")
-                            CategoryView(title: "세계", imageStr: "image5")
+                            CategoryView(title: "홈",tag: 0, imageStr: "image5")
+                            CategoryView(title: "정치",tag: 1, imageStr: "image5")
+                            CategoryView(title: "경제",tag: 2, imageStr: "image5")
+                            CategoryView(title: "사회",tag: 3, imageStr: "image5")
+                            CategoryView(title: "IT/과학",tag: 4, imageStr: "image5")
+                            CategoryView(title: "생활/문화",tag: 5, imageStr: "image5")
+                            CategoryView(title: "세계",tag: 6, imageStr: "image5")
                         }
                     }
-                    ForEach(articles) { article in
+                    ForEach(articles.articles) { article in
                         ArticleView(article: article)
 //                            .padding(.bottom, 16)
                         .padding(16)
                         .padding(.top, 8)
                         .padding(.bottom, 8)
-                        
-                        
-
                     }
                 }
             }
@@ -54,7 +57,7 @@ struct ContentView: View {
             ArticleAPI.callArticle(lastId: nil, limit: 10, category: nil,includKeywords: nil, excludeKeywords: nil) { responseArticles in
                 print(responseArticles)
                 guard responseArticles != nil else { return }
-                self.articles = responseArticles!
+                self.articles.articles = responseArticles!
                 
             }
         }
