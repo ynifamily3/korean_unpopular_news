@@ -12,9 +12,16 @@ import UIKit
 class ArticleObserver : ObservableObject{
     @Published var articles = Array<ArticleVO>()
 }
+struct ModalView: View {
+    @Binding var presentedAsModal: Bool
+    var body: some View {
+        
+        Button("dismiss") { self.presentedAsModal = false }
+    }
+}
 
 struct ContentView: View {
-
+    @State var presentingModal = false
     @EnvironmentObject var articles : ArticleObserver
 //    @State var articles = Array<ArticleVO>()
     @State var category = ["목록1","목록2","목록3","목록4"]
@@ -38,6 +45,8 @@ struct ContentView: View {
                             CategoryView(title: "세계",tag: 6, imageStr: "image5")
                         }
                     }
+                    Button("검색조건 추가하기") { self.presentingModal = true }
+                    .sheet(isPresented: $presentingModal) { ModalView(presentedAsModal: self.$presentingModal) }
                     ForEach(articles.articles) { article in
                         ArticleView(article: article)
 //                            .padding(.bottom, 16)

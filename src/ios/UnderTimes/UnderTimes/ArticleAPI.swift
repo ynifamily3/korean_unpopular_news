@@ -22,6 +22,29 @@ enum CategoryVO:String {
     case WORLD
     case SCIENCE
 }
+class KeywordAPI{
+    static func searchKeyword(value:String, _ completion:@escaping ([KeywordVO]?)->Void){
+        var queryString = "{keywords(value: \"\(value)\""
+        queryString = queryString + ") { \n value \n weight \n createdAt \n }}"
+        let param :Parameters = [
+            "query":queryString
+        ]
+        Alamofire.request("https://undertimes.alien.moe/graphql", method: .post, parameters: param, encoding: JSONEncoding.default, headers: ["Content-Type":"application/json"]).responseObject { (response:DataResponse<DataKeywordVO>) in
+            switch response.result{
+            case .success(let value):
+               if let receivedKeyWord = value.data{
+                    if let keywords = receivedKeyWord.keywords{
+                        completion(keywords)
+                    }else{completion(nil)}
+                }else{completion(nil)}
+            case .failure(let error):
+                completion(nil)
+                print(error)
+            }
+        }
+    }
+    
+}
 
 class ArticleAPI{
     
@@ -55,7 +78,6 @@ class ArticleAPI{
             }
             queryString = queryString + "]"
         }
-        
         queryString = queryString + ") { \n id \n title \n url \n img \n keywords { \n value \n } \n }}"
         let param :Parameters = [
             "query":queryString
@@ -73,15 +95,5 @@ class ArticleAPI{
                 print(error)
             }
         }
-            
-            
-            /*
-            .responseString { (response) in
-            print(response)
-            print(response.result)
-            print(response.data)
-            print(response.description)
-        }*/
-        
     }
 }

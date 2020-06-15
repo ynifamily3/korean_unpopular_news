@@ -20,6 +20,25 @@ class DataVO:Mappable{
     }
 }
 
+class DataKeywordVO:Mappable{
+    var data : KeywordsVO?
+    required init?(map: Map) {
+        
+    }
+    func mapping(map: Map) {
+        data <- map["data"]
+    }
+}
+class KeywordsVO:Mappable{
+    var keywords:[KeywordVO]?
+    required init?(map: Map) {
+        
+    }
+    func mapping(map: Map) {
+        keywords <- map["keywords"]
+    }
+}
+
 class NewsArticleVO: Mappable{
     
     var newsArticles : [ArticleVO]?
@@ -57,14 +76,16 @@ class ArticleVO : Mappable,Identifiable{
     }
 }
 
-class KeywordVO:Mappable{
+class KeywordVO:Mappable,Identifiable{
     var value:String?
     var weight:Float?
+    var createdAt:String?
     required init?(map: Map) {
         
     }
     func mapping(map: Map) {
         value <- map["value"]
         weight <- map["weight"]
+        createdAt <- map["createdAt"]
     }
 }
