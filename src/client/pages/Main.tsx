@@ -3,13 +3,20 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Helmet } from "react-helmet";
 import Card from "../components/Card";
 import ApolloClient, { gql } from "apollo-boost";
-import { Button } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 import { useLocation } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import queryString from "query-string";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
 import { useQuery } from "@apollo/react-hooks";
+import Grid from "@material-ui/core/Grid";
+import "date-fns";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
 
 const client = new ApolloClient({
   uri: "https://undertimes.alien.moe/graphql",
@@ -41,10 +48,12 @@ const FETCH_NEWS_ARTICLES = gql`
     $category: Category
     $offset: ID = 0
     $start: DateTime! = "2020-06-01T12:51:44.012Z"
+    $end: DateTime!
   ) {
     newsArticles(
       offset: $offset
       start: $start
+      end: $end
       limit: 15
       include_keywords: $include
       exclude_keywords: $exclude
@@ -90,14 +99,51 @@ const Main = (props: MainProps): JSX.Element => {
   const [moreLoaded, setMoreLoaded] = useState<boolean>(true);
   const [newses, setNewses] = useState<NewsArticle[] | null>(null);
   const [nomoreNewsOpen, setNomoreNewsOpen] = useState<boolean>(false);
-  const [yesterday, setYesterday] = useState(
+  const yesterday = function (this: Date) {
+    this.setDate(this.getDate() - 1);
+    return this;
+  }.call(new Date());
+  const today = new Date();
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
     function (this: Date) {
       this.setDate(this.getDate() - 1);
       return this;
-    }
-      .call(new Date())
-      .toISOString()
+    }.call(new Date())
   );
+
+  const [selectedEnddDate, setSelectedEndDate] = React.useState<Date | null>(
+    new Date()
+  );
+
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+    refetch({
+      include,
+      exclude,
+      start: date?.toISOString(),
+      end: selectedEnddDate?.toISOString(),
+      offset: 0,
+      category:
+        location.pathname.substr(1) === "ALL"
+          ? undefined
+          : location.pathname.substr(1),
+    });
+  };
+
+  const handleDateEndChange = (date: Date | null) => {
+    setSelectedEndDate(date);
+    refetch({
+      include,
+      exclude,
+      start: selectedDate?.toISOString(),
+      end: date?.toISOString(),
+      offset: 0,
+      category:
+        location.pathname.substr(1) === "ALL"
+          ? undefined
+          : location.pathname.substr(1),
+    });
+  };
   const { section } = props;
   const classes = useStyles();
   const location = useLocation();
@@ -125,7 +171,8 @@ const Main = (props: MainProps): JSX.Element => {
         variables: {
           include,
           exclude,
-          start: yesterday,
+          start: selectedDate?.toISOString(),
+          end: selectedEnddDate?.toISOString(),
           offset:
             newses && newses.length > 0 ? +newses[newses.length - 1].id : 0,
           category:
@@ -153,7 +200,8 @@ const Main = (props: MainProps): JSX.Element => {
     variables: {
       include,
       exclude,
-      start: yesterday,
+      start: selectedDate?.toISOString(),
+      end: selectedEnddDate?.toISOString(),
       offset: 0,
       category:
         location.pathname.substr(1) === "ALL"
@@ -178,7 +226,8 @@ const Main = (props: MainProps): JSX.Element => {
       refetch({
         include,
         exclude,
-        start: yesterday,
+        start: selectedDate?.toISOString(),
+        end: selectedEnddDate?.toISOString(),
         offset: 0,
         category:
           location.pathname.substr(1) === "ALL"
@@ -192,6 +241,42 @@ const Main = (props: MainProps): JSX.Element => {
       <Helmet>
         <title>UnderTimes {section}</title>
       </Helmet>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <Grid
+          container
+          justify="space-around"
+          style={{ width: "80%", maxWidth: "720px", margin: "25px auto" }}
+        >
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="yyyy/MM/dd"
+            margin="normal"
+            id="date-picker-inline"
+            label="기사 시작 날짜"
+            value={selectedDate}
+            onChange={handleDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change date",
+            }}
+          />
+          <Typography style={{ margin: "auto 0" }}> ~ </Typography>
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="yyyy/MM/dd"
+            margin="normal"
+            id="date-picker-inline-2"
+            label="기사 끝 날짜"
+            value={selectedEnddDate}
+            onChange={handleDateEndChange}
+            KeyboardButtonProps={{
+              "aria-label": "change date",
+            }}
+          />
+        </Grid>
+      </MuiPickersUtilsProvider>
+
       {loading && <CircularProgress className={classes.loading} />}
       {data &&
         newses &&
