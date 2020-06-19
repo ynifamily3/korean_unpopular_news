@@ -34,13 +34,16 @@ struct ArticleView: View {
     let article :ArticleVO
     var body: some View{
         VStack(alignment: .leading, spacing: 10) {
-            WebImage(url: URL(string: article.img ?? ""))
+            
+            
+            WebImage(url: URL(string: article.img ?? "https://www.bmc.busan.kr/bmc/images/content/noimage2.jpg"))
             .resizable()  // creates resizable image
             .aspectRatio(contentMode: .fit)
             
 
             Text(article.title ?? "").lineLimit(2).font(.body)
                 .background(Color.white)
+                .padding(.bottom, 8)
             .foregroundColor(.black)
                 .frame(minWidth: 0, maxWidth: .infinity, idealHeight: nil, maxHeight: nil, alignment: .bottom)
             

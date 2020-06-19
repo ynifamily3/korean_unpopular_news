@@ -4,7 +4,7 @@
 //
 //  Created by Andrew Han on 2020/06/02.
 //  Copyright © 2020 escapeanaemia. All rights reserved.
-//
+// 
 
 import Foundation
 import Alamofire
@@ -53,7 +53,7 @@ class ArticleAPI{
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.locale = Locale(identifier: "ko_KR")
         var current_date = formatter.string(from: Date())
-        
+        current_date = "2020-05-31"
         var queryString = "{newsArticles(start: \"\(current_date)\""
         if category != nil {
             queryString = queryString + ", category : \(category!)"

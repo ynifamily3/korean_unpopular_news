@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		392AC46D9EDEDE6B67901B1F /* Pods_UnderTimes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5221C5DAB544A713E67DF7D0 /* Pods_UnderTimes.framework */; };
+		49694EA22497FE68002D33A7 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49694EA12497FE68002D33A7 /* SearchBar.swift */; };
 		497B87EB24820D2E00A6A0AA /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497B87EA24820D2E00A6A0AA /* Network.swift */; };
 		498395D4248E07A7007541D2 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498395D3248E07A7007541D2 /* WebView.swift */; };
 		49B2D7B02485E77300A0915B /* ArticleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B2D7AF2485E77300A0915B /* ArticleModel.swift */; };
@@ -50,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		2F82593718801EC969B08961 /* Pods_UnderTimes_UnderTimesUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnderTimes_UnderTimesUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49694EA12497FE68002D33A7 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		497B87EA24820D2E00A6A0AA /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		498395D3248E07A7007541D2 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		49B2D7AF2485E77300A0915B /* ArticleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleModel.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				49B416542468556300B2EA91 /* AppDelegate.swift */,
 				49B416562468556300B2EA91 /* SceneDelegate.swift */,
 				49B416582468556300B2EA91 /* ContentView.swift */,
+				49694EA12497FE68002D33A7 /* SearchBar.swift */,
 				49E13050246FFDA900CCD53F /* CategoryView.swift */,
 				49B416852468559F00B2EA91 /* Article.swift */,
 				49B416862468559F00B2EA91 /* ArticleView.swift */,
@@ -456,6 +459,7 @@
 				49B416572468556300B2EA91 /* SceneDelegate.swift in Sources */,
 				49B416592468556300B2EA91 /* ContentView.swift in Sources */,
 				497B87EB24820D2E00A6A0AA /* Network.swift in Sources */,
+				49694EA22497FE68002D33A7 /* SearchBar.swift in Sources */,
 				49B2D7B02485E77300A0915B /* ArticleModel.swift in Sources */,
 				49B2D7B22485E95C00A0915B /* ArticleAPI.swift in Sources */,
 				49B416892468559F00B2EA91 /* Article.swift in Sources */,
