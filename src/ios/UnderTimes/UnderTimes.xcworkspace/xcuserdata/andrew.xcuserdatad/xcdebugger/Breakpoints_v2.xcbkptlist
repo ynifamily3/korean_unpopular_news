@@ -16,37 +16,37 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "32"
             endingLineNumber = "32"
-            landmarkName = "callArticle(lastId:category:includKeywords:excludeKeywords:_:)"
+            landmarkName = "searchKeyword(value:_:)"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "33BD9532-6E1D-43CB-B713-251C56C501B9 - a139186c998c6dda"
+                  uuid = "33BD9532-6E1D-43CB-B713-251C56C501B9 - a7a4930336d86787"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "static UnderTimes.ArticleAPI.callArticle((Swift.Optional&lt;Swift.Array&lt;UnderTimes.ArticleVO&gt;&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "static UnderTimes.KeywordAPI.searchKeyword(value: Swift.String, _: (Swift.Optional&lt;Swift.Array&lt;UnderTimes.KeywordVO&gt;&gt;) -&gt; ()) -&gt; ()"
                   moduleName = "UnderTimes"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/andrew/opensourceEngineering/korean_unpopular_news/src/ios/UnderTimes/UnderTimes/ArticleAPI.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "24"
-                  endingLineNumber = "24"
-                  offsetFromSymbolStart = "274">
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "799">
                </Location>
                <Location
-                  uuid = "33BD9532-6E1D-43CB-B713-251C56C501B9 - ce157b712d340ba1"
+                  uuid = "33BD9532-6E1D-43CB-B713-251C56C501B9 - b89703f6d8100e60"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Alamofire.DataResponse&lt;UnderTimes.DataVO&gt;) -&gt; () in static UnderTimes.ArticleAPI.callArticle((Swift.Optional&lt;Swift.Array&lt;UnderTimes.ArticleVO&gt;&gt;) -&gt; ()) -&gt; ()"
+                  symbolName = "closure #1 (Alamofire.DataResponse&lt;UnderTimes.DataKeywordVO&gt;) -&gt; () in static UnderTimes.KeywordAPI.searchKeyword(value: Swift.String, _: (Swift.Optional&lt;Swift.Array&lt;UnderTimes.KeywordVO&gt;&gt;) -&gt; ()) -&gt; ()"
                   moduleName = "UnderTimes"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/andrew/opensourceEngineering/korean_unpopular_news/src/ios/UnderTimes/UnderTimes/ArticleAPI.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "25"
-                  endingLineNumber = "25"
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
                   offsetFromSymbolStart = "222">
                </Location>
             </Locations>
@@ -64,7 +64,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "28"
             endingLineNumber = "28"
-            landmarkName = "callArticle(lastId:category:includKeywords:excludeKeywords:_:)"
+            landmarkName = "searchKeyword(value:_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -80,8 +80,86 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "33"
             endingLineNumber = "33"
-            landmarkName = "callArticle(lastId:category:includKeywords:excludeKeywords:_:)"
+            landmarkName = "searchKeyword(value:_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F7F31C91-BCB6-4BB1-A1FE-DF40C886842F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "UnderTimes/ArticleAPI.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "CategoryVO"
+            landmarkType = "13">
+            <Locations>
+               <Location
+                  uuid = "F7F31C91-BCB6-4BB1-A1FE-DF40C886842F - 7992ac984611bf23"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UnderTimes.KeywordAPI.__allocating_init() -&gt; UnderTimes.KeywordAPI"
+                  moduleName = "UnderTimes"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/andrew/opensourceEngineering/korean_unpopular_news/src/ios/UnderTimes/UnderTimes/ArticleAPI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "14">
+               </Location>
+               <Location
+                  uuid = "F7F31C91-BCB6-4BB1-A1FE-DF40C886842F - 270fcb6e562d4ec7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UnderTimes.KeywordAPI.init() -&gt; UnderTimes.KeywordAPI"
+                  moduleName = "UnderTimes"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/andrew/opensourceEngineering/korean_unpopular_news/src/ios/UnderTimes/UnderTimes/ArticleAPI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "25"
+                  endingLineNumber = "25"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  uuid = "F7F31C91-BCB6-4BB1-A1FE-DF40C886842F - 10659b3d071cb29e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UnderTimes.KeywordAPI.deinit"
+                  moduleName = "UnderTimes"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/andrew/opensourceEngineering/korean_unpopular_news/src/ios/UnderTimes/UnderTimes/ArticleAPI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "12">
+               </Location>
+               <Location
+                  uuid = "F7F31C91-BCB6-4BB1-A1FE-DF40C886842F - 4abe1dfa7487eeed"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UnderTimes.KeywordAPI.__deallocating_deinit"
+                  moduleName = "UnderTimes"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/andrew/opensourceEngineering/korean_unpopular_news/src/ios/UnderTimes/UnderTimes/ArticleAPI.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "16">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -9,12 +9,41 @@
 import SwiftUI
 import UIKit
 
+class KeywordObserver : ObservableObject{
+    @Published var keywords = Array<KeywordVO>()
+}
+
 class ArticleObserver : ObservableObject{
     @Published var articles = Array<ArticleVO>()
 }
+struct ModalView: View {
+    @Binding var presentedAsModal: Bool
+    let cars = ["Subaru WRX", "Tesla Model 3", "Porsche 911", "Renault Zoe", "DeLorean"]
+    @State private var searchText : String = ""
+    var body: some View {
+        NavigationView {
+            VStack {
+                Button("dismiss") { self.presentedAsModal = false }
+//                SearchBar(text: $searchText)
+//                List {
+//                    ForEach(self.cars.filter {
+//                        self.searchText.isEmpty ? true : $0.contains(self.searchText)
+//                    }, id: \.self) { car in
+//                        Text(car)
+//                    }
+//                }.navigationBarTitle(Text("Cars"))
+            }
+        }
+        
+    }
+}
 
 struct ContentView: View {
-
+    let cars = ["Subaru WRX", "Tesla Model 3", "Porsche 911", "Renault Zoe", "DeLorean"]
+    @State private var searchText : String = ""
+    @State private var keywordList = Array<KeywordVO>()
+    @State var presentingModal = false
+    @EnvironmentObject var keywords : KeywordObserver
     @EnvironmentObject var articles : ArticleObserver
 //    @State var articles = Array<ArticleVO>()
     @State var category = ["목록1","목록2","목록3","목록4"]
@@ -38,23 +67,24 @@ struct ContentView: View {
                             CategoryView(title: "세계",tag: 6, imageStr: "image5")
                         }
                     }
+//                    Button("검색조건 추가하기") { self.presentingModal = true }
+//                    .sheet(isPresented: $presentingModal) { ModalView(presentedAsModal: self.$presentingModal) }
+                    SearchBar(text: $searchText, keywords: $keywords.keywords, articles: $articles.articles)
+                    
                     ForEach(articles.articles) { article in
                         ArticleView(article: article)
-//                            .padding(.bottom, 16)
                         .padding(16)
                         .padding(.top, 8)
                         .padding(.bottom, 8)
                     }
                 }
             }
-            
-            
             .padding(.leading, -20)
             .padding(.trailing, -20) 
-            .navigationBarTitle(Text("Articles"))
+            .navigationBarTitle(Text("Undertimes"))
 
         }.onAppear{
-            ArticleAPI.callArticle(lastId: nil, limit: 10, category: nil,includKeywords: nil, excludeKeywords: nil) { responseArticles in
+            ArticleAPI.callArticle(lastId: nil, limit: 30, category: nil,includKeywords: nil, excludeKeywords: nil) { responseArticles in
                 print(responseArticles)
                 guard responseArticles != nil else { return }
                 self.articles.articles = responseArticles!
