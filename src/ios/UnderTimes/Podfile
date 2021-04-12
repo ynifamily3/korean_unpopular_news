@@ -8,7 +8,7 @@ target 'UnderTimes' do
   # Pods for UnderTimes
 
 	pod 'Alamofire', '~> 4.9.1'
-	pod 'ObjectMapper', '~> 3.5'
+	pod 'ObjectMapper', '~> 4.0'
 	pod 'AlamofireObjectMapper'
 	pod 'Apollo'
 	pod 'SDWebImage'
