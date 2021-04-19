@@ -71,7 +71,7 @@
     "apollo-boost": "^0.4.9",
     "apollo-server-express": "^2.14.2",
     "axios": "^0.21.1",
-    "class-validator": "^0.12.2",
+    "class-validator": "0.13.1",
     "cross-fetch": "^3.0.4",
     "date-fns": "^2.14.0",
     "esm": "^3.2.25",
