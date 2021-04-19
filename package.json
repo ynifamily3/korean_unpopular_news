@@ -22,7 +22,7 @@
     "@babel/preset-react": "^7.9.4",
     "@babel/preset-typescript": "^7.9.0",
     "@loadable/babel-plugin": "^5.12.0",
-    "@loadable/component": "^5.12.0",
+    "@loadable/component": "5.14.1",
     "@loadable/server": "^5.12.0",
     "@loadable/webpack-plugin": "^5.12.0",
     "@types/loadable__server": "^5.12.1",
